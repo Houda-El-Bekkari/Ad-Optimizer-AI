@@ -1,0 +1,327 @@
+<main class="page planner-page">
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">Campaign Planner</p>
+      <h1>Creation nouvelle campagne</h1>
+      <p class="muted">Configurer le brief, generer une strategie IA, puis lire directement predictions, risques et explication.</p>
+    </div>
+    <span class="pill">Strategy engine ready</span>
+  </header>
+
+  <section class="planner-hero-grid">
+    <article class="card planner-brief-card">
+      <div class="card-header">
+        <div>
+          <p class="eyebrow">1. Campaign brief</p>
+          <h2>Parametres marketing</h2>
+        </div>
+        <span class="chip">Input</span>
+      </div>
+
+      <form class="form-grid" (ngSubmit)="generateStrategy()">
+        <label>
+          Objectif marketing
+          <select name="objectif" [(ngModel)]="form.objectif">
+            <option value="leads">Generation de leads</option>
+            <option value="conversions">Conversions</option>
+            <option value="traffic">Trafic site web</option>
+            <option value="awareness">Notoriete</option>
+          </select>
+        </label>
+        <label>
+          Plateforme cible
+          <select name="plateforme" [(ngModel)]="form.plateforme">
+            <option value="both">Meta Ads + Google Ads</option>
+            <option value="meta">Meta Ads uniquement</option>
+            <option value="google">Google Ads uniquement</option>
+          </select>
+        </label>
+        <label>
+          Produit / service
+          <input name="produit" type="text" [(ngModel)]="form.produit" />
+        </label>
+        <label>
+          Budget total
+          <input name="budget" type="number" min="0" [(ngModel)]="form.budget" />
+        </label>
+      </form>
+
+      <div class="action-row planner-actions">
+        <button class="primary" type="button" [disabled]="loading" (click)="generateStrategy()">
+          @if (loading) {
+            Generation en cours...
+          } @else {
+            Generer strategie IA
+          }
+        </button>
+        <button type="button" [disabled]="loading" (click)="resetForm()">Reinitialiser</button>
+      </div>
+
+      @if (error) {
+        <div class="list">
+          <div class="list-row">
+            <div>
+              <strong>Connexion impossible</strong>
+              <p>{{ error }}</p>
+            </div>
+            <span class="chip danger">n8n</span>
+          </div>
+        </div>
+      }
+
+      <section class="recommendation-box" [class.is-empty]="!result">
+        <div class="recommendation-top">
+          <div>
+            <p class="eyebrow">2. Recommended strategy</p>
+            <h2>{{ recommendationTitle }}</h2>
+          </div>
+          <span class="chip success">{{ recommendationPlatformLabel }}</span>
+        </div>
+
+        <p>
+          {{
+            result?.final_message ||
+              "Remplissez le brief puis lancez la generation pour afficher ici la recommandation reelle du workflow n8n."
+          }}
+        </p>
+
+        <div class="recommendation-meta">
+          <span class="chip">Confidence {{ confidence?.score || '--' }}%</span>
+          @if (confidence?.level) {
+            <span class="chip">{{ confidence?.level }}</span>
+          }
+          <span class="chip">Budget {{ recommendationBudgetLabel }}</span>
+          @if (hasMultiPlatformPlan) {
+            <span class="chip">Reserve {{ displayMoney(multiPlatformPlan?.reserve_budget, '--') }}</span>
+          }
+        </div>
+      </section>
+    </article>
+
+    <aside class="card planner-summary-card">
+      <p class="eyebrow">Brief envoye</p>
+      <h2>Scenario courant</h2>
+      <div class="summary-list">
+        <div>
+          <span>Objectif</span>
+          <strong>{{ form.objectif }}</strong>
+        </div>
+        <div>
+          <span>Plateforme</span>
+          <strong>{{ platformLabel(form.plateforme) }}</strong>
+        </div>
+        <div>
+          <span>Produit</span>
+          <strong>{{ form.produit }}</strong>
+        </div>
+        <div>
+          <span>Budget</span>
+          <strong>{{ displayMoney(form.budget) }}</strong>
+        </div>
+      </div>
+
+      <div class="status-line">
+        <span></span>
+        <div>
+          @if (loading) {
+            <strong>Analyse en cours</strong>
+            <p>Le workflow prepare la strategie.</p>
+          } @else if (result) {
+            <strong>Recommandation recue</strong>
+            <p>Les predictions et risques sont synchronises.</p>
+          } @else {
+            <strong>Pret pour generation</strong>
+            <p>Le workflow attend votre brief.</p>
+          }
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <section class="planner-results-grid">
+    <article class="card prediction-card">
+      <div class="card-header">
+        <div>
+          <p class="eyebrow">3. Performance prediction</p>
+          <h2>Resultats estimes J+14</h2>
+        </div>
+        <span class="chip">Prediction</span>
+      </div>
+
+      @if (hasMultiPlatformPlan) {
+        <section class="channel-performance-grid">
+          @for (channel of multiPlatformChannels; track channel.strategy_id || channel.platform) {
+            <article class="channel-performance-card">
+              <div class="channel-heading">
+                <span>{{ platformLabel(channel.platform) }}</span>
+                <strong>{{ displayMoney(channel.budget, '--') }}</strong>
+              </div>
+              <div class="channel-kpis">
+                <span><b>{{ displayNumber(channel.kpis?.conversions_j14, '--') }}</b> conversions</span>
+                <span><b>{{ displayMoney(channel.kpis?.cpa_j14, '--') }}</b> CPA</span>
+                <span><b>{{ displayRoas(channel.kpis?.roas_j14, '--') }}</b> ROAS</span>
+              </div>
+            </article>
+          }
+
+          <article class="channel-performance-card reserve-card">
+            <div class="channel-heading">
+              <span>Reserve optimisation</span>
+              <strong>{{ displayMoney(multiPlatformPlan?.reserve_budget, '--') }}</strong>
+            </div>
+            <p>Budget conserve pour reallocation apres les premiers resultats.</p>
+          </article>
+        </section>
+      } @else {
+        <section class="metric-grid planner-metrics">
+          <article class="metric-card">
+            <span>Conversions prevues</span>
+            <strong>{{ displayNumber(kpis?.conversions_j14, '--') }}</strong>
+            <small>J+14</small>
+          </article>
+          <article class="metric-card">
+            <span>CPA prevu</span>
+            <strong>{{ displayMoney(kpis?.cpa_j14, '--') }}</strong>
+            <small>Acquisition</small>
+          </article>
+          <article class="metric-card">
+            <span>ROAS prevu</span>
+            <strong>{{ displayRoas(kpis?.roas_j14, '--') }}</strong>
+            <small>Scenario retenu</small>
+          </article>
+          <article class="metric-card">
+            <span>Confiance</span>
+            <strong>{{ confidence?.score || '--' }}%</strong>
+            <small>{{ confidence?.level || 'En attente' }}</small>
+          </article>
+        </section>
+      }
+    </article>
+
+    <article class="card budget-card">
+      <div class="card-header">
+        <div>
+          <p class="eyebrow">4. Budget allocation</p>
+          <h2>Repartition recommandee</h2>
+        </div>
+        <span class="chip success">Optimized mix</span>
+      </div>
+      <div class="bars">
+        @if (hasMultiPlatformPlan) {
+          @for (channel of multiPlatformChannels; track channel.strategy_id || channel.platform) {
+            <div class="bar">
+              <span>{{ platformLabel(channel.platform) }} : {{ displayMoney(channel.budget, '--') }}</span>
+              <i [style.width.%]="budgetShare(channel.budget)"></i>
+            </div>
+          }
+          <div class="bar reserve-bar">
+            <span>Reserve optimisation : {{ displayMoney(multiPlatformPlan?.reserve_budget, '--') }}</span>
+            <i [style.width.%]="budgetShare(multiPlatformPlan?.reserve_budget)"></i>
+          </div>
+        } @else {
+          <div class="bar">
+            <span>{{ platformLabel(recommendation?.platform || form.plateforme) }}</span>
+            <i style="width: 76%"></i>
+          </div>
+          <div class="bar">
+            <span>Budget recommande : {{ displayMoney(recommendation?.budget, displayMoney(form.budget)) }}</span>
+            <i style="width: 58%"></i>
+          </div>
+          <div class="bar">
+            <span>Reserve optimisation</span>
+            <i style="width: 22%"></i>
+          </div>
+        }
+      </div>
+    </article>
+  </section>
+
+  <section class="planner-detail-grid">
+    <article class="card">
+      <div class="card-header">
+        <div>
+          <p class="eyebrow">5. Action plan</p>
+          <h2>Plan recommande</h2>
+        </div>
+        <span class="chip success">Next steps</span>
+      </div>
+
+      @if (actionPlanList.length) {
+        <div class="timeline">
+          @for (item of actionPlanList; track item.step || item.title) {
+            <div class="timeline-item">
+              <strong>{{ item.step }}. {{ item.title }}</strong>
+              <p>{{ item.action }}</p>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="list-row">
+          <div>
+            <strong>Le plan d'action apparaitra ici</strong>
+            <p>Apres generation, le workflow affichera les etapes conseillees pour lancer la campagne.</p>
+          </div>
+        </div>
+      }
+    </article>
+
+    <article class="card">
+      <div class="card-header">
+        <div>
+          <p class="eyebrow">6. Risks and explanation</p>
+          <h2>Pourquoi cette decision ?</h2>
+        </div>
+        <span class="chip warning">Monitor</span>
+      </div>
+
+      <div class="explanation-grid">
+        <section>
+          <h3>Justification IA</h3>
+          <div class="list compact-list">
+            @if (whyList.length) {
+              @for (reason of whyList; track reason) {
+                <div class="list-row">
+                  <div>
+                    <strong>{{ hasMultiPlatformPlan ? 'Logique multi-canal' : 'Facteur de decision' }}</strong>
+                    <p>{{ reason }}</p>
+                  </div>
+                </div>
+              }
+            } @else {
+              <div class="list-row">
+                <div>
+                  <strong>La justification IA apparaitra ici</strong>
+                  <p>Le workflow renverra les raisons de la strategie retenue apres generation.</p>
+                </div>
+              </div>
+            }
+          </div>
+        </section>
+
+        <section>
+          <h3>Risques a surveiller</h3>
+          <div class="list compact-list">
+            @if (risksList.length) {
+              @for (risk of risksList; track risk) {
+                <div class="list-row">
+                  <div>
+                    <strong>Point de vigilance</strong>
+                    <p>{{ risk }}</p>
+                  </div>
+                  <span class="chip warning">Monitor</span>
+                </div>
+              }
+            } @else {
+              <div class="list-row">
+                <div>
+                  <strong>Aucun risque charge</strong>
+                  <p>Les risques seront affiches apres la recommandation.</p>
+                </div>
+              </div>
+            }
+          </div>
+        </section>
+      </div>
+    </article>
+  </section>
+</main>

@@ -1,0 +1,66 @@
+<main class="app-shell">
+  <aside class="sidebar">
+    <a class="brand" routerLink="/">
+      <span>AI</span>
+      <div>
+        <strong>AdOptimizer</strong>
+        <small>Campaign Intelligence</small>
+      </div>
+    </a>
+
+    <nav aria-label="Navigation workspace">
+      <div class="nav-section">Main</div>
+      <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <span class="nav-icon overview-icon" aria-hidden="true"></span>
+        <span>Overview</span>
+      </a>
+      <a routerLink="/campaigns" routerLinkActive="active">
+        <span class="nav-icon campaigns-icon" aria-hidden="true"></span>
+        <span>Campaigns</span>
+      </a>
+      <a routerLink="/optimization" routerLinkActive="active">
+        <span class="nav-icon optimization-icon" aria-hidden="true"></span>
+        <span>Optimization</span>
+      </a>
+      <a routerLink="/campaign-planner" routerLinkActive="active">
+        <span class="nav-icon planner-icon" aria-hidden="true"></span>
+        <span>Campaign Planner</span>
+      </a>
+
+      <div class="nav-section">Intelligence</div>
+      <a routerLink="/decision-insights" routerLinkActive="active">
+        <span class="nav-icon insights-icon" aria-hidden="true"></span>
+        <span>Decision Insights</span>
+      </a>
+      <a routerLink="/ai-assistant" routerLinkActive="active">
+        <span class="nav-icon assistant-icon" aria-hidden="true"></span>
+        <span>AI Assistant</span>
+      </a>
+      <div class="nav-section">System</div>
+      <a routerLink="/connect-platforms">
+        <span class="nav-icon platforms-icon" aria-hidden="true"></span>
+        <span>Platforms</span>
+      </a>
+      <a routerLink="/reports" routerLinkActive="active">
+        <span class="nav-icon reports-icon" aria-hidden="true"></span>
+        <span>Reports</span>
+      </a>
+      <a routerLink="/settings" routerLinkActive="active">
+        <span class="nav-icon settings-icon" aria-hidden="true"></span>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-status">
+      <span></span>
+      <div>
+        <strong>AI monitoring active</strong>
+        <small>Agents synchronized</small>
+      </div>
+    </div>
+  </aside>
+
+  <section class="workspace">
+    <router-outlet />
+  </section>
+</main>

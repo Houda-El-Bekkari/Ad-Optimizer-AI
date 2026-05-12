@@ -1,0 +1,136 @@
+<main class="assistant-page">
+  <header class="assistant-header">
+    <div>
+      <p class="eyebrow">AI Assistant</p>
+      <h1>Assistant Marketing Intelligent</h1>
+      <p>Posez vos questions marketing et obtenez des explications claires sur vos campagnes publicitaires.</p>
+    </div>
+    <div class="mode-switch">
+      @for (mode of modes; track mode.value) {
+        <button type="button" [class.active]="selectedMode === mode.value" (click)="selectMode(mode.value)">
+          {{ mode.label }}
+        </button>
+      }
+    </div>
+  </header>
+
+  <section class="assistant-grid">
+    <aside class="knowledge-panel">
+      <div class="panel-title">
+        <span class="panel-icon question-icon"></span>
+        <div>
+          <p class="eyebrow">Questions frequentes</p>
+          <h2>Prompts assistes</h2>
+        </div>
+      </div>
+
+      @for (group of promptGroups; track group.title) {
+        <article class="prompt-group">
+          <h3>{{ group.title }}</h3>
+          @for (prompt of group.prompts; track prompt) {
+            <button class="prompt-option" type="button" (click)="usePrompt(prompt)">
+              {{ prompt }}
+            </button>
+          }
+        </article>
+      }
+
+      <div class="learning-modules">
+        <p class="eyebrow">Modules educatifs</p>
+        <button type="button"><span>A-Z</span> Glossaire Marketing</button>
+        <button type="button"><span>FX</span> Concepts cles</button>
+        <button type="button"><span>QZ</span> Quiz</button>
+      </div>
+    </aside>
+
+    <section class="core-panel">
+      <div class="assistant-orbit" aria-hidden="true">
+        <div class="halo"></div>
+        <div class="ai-avatar">
+          <span class="head"></span>
+          <span class="body"></span>
+        </div>
+        <i class="signal signal-a"></i>
+        <i class="signal signal-b"></i>
+        <i class="signal signal-c"></i>
+      </div>
+
+      <div class="conversation-frame">
+        <div class="frame-top">
+          <span>Consultant IA</span>
+          <strong>Workflow n8n connecte</strong>
+        </div>
+
+        <div class="conversation-thread">
+          @for (message of messages; track $index) {
+            <div class="bubble" [class.user]="message.role === 'user'" [class.ai]="message.role === 'ai'">
+              <span>{{ message.meta || (message.role === 'user' ? 'Vous' : 'AdOptimizer AI') }}</span>
+              <p>{{ message.text }}</p>
+            </div>
+          }
+
+          @if (loading) {
+            <div class="bubble ai typing">
+              <span>AdOptimizer AI</span>
+              <p>Analyse des donnees et preparation de la reponse...</p>
+            </div>
+          }
+        </div>
+
+        @if (error) {
+          <p class="chat-error">{{ error }}</p>
+        }
+
+        <form class="chat-input" (ngSubmit)="ask()">
+          <input
+            type="text"
+            name="question"
+            [(ngModel)]="question"
+            placeholder="Posez votre question marketing..."
+            [disabled]="loading"
+          />
+          <button type="submit" [disabled]="loading || !question.trim()">
+            {{ loading ? "..." : "Send" }}
+          </button>
+        </form>
+      </div>
+
+      <div class="learning-progress">
+        <span>Mode {{ selectedMode }}</span>
+        <div><i style="width: 65%"></i></div>
+        <strong>{{ lastMode }}</strong>
+      </div>
+    </section>
+
+    <aside class="suggestions-panel">
+      <div class="panel-title">
+        <span class="panel-icon question-icon"></span>
+        <div>
+          <p class="eyebrow">Etat de l'assistant</p>
+          <h2>Votre espace marketing</h2>
+        </div>
+      </div>
+
+      <article class="prompt-group">
+        <h3>Ce que l'assistant peut faire</h3>
+        <p>Expliquer une baisse de performance</p>
+        <p>Comparer Google Ads et Meta Ads</p>
+        <p>Proposer une action prioritaire</p>
+        <p>Clarifier un indicateur marketing</p>
+      </article>
+
+      <article class="prompt-group">
+        <h3>Derniere analyse</h3>
+        <p>Une campagne Meta demande une attention prioritaire.</p>
+        <p>L'assistant interroge les resultats XAI stockes dans PostgreSQL.</p>
+      </article>
+
+      <div class="active-context">
+        <p class="eyebrow">Connexions actives</p>
+        <div><span class="google-dot"></span> Google Ads</div>
+        <div><span class="meta-dot"></span> Meta Ads</div>
+        <div><span class="crm-dot"></span> Historique campagnes</div>
+      </div>
+    </aside>
+  </section>
+</main>

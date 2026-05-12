@@ -1,0 +1,213 @@
+<main class="page-content">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Premium Ads Analytics</p>
+        <h1>Campaign Overview</h1>
+      </div>
+      <div class="topbar-actions">
+        <span class="sync-pill">Last audit: 2 min ago</span>
+        <span class="avatar">HA</span>
+      </div>
+    </header>
+
+    <section class="kpi-grid" aria-label="Indicateurs publicitaires">
+      <article class="kpi-card">
+        <span>ROAS global</span>
+        <strong>3.2x</strong>
+        <small class="down">-0.4 vs semaine passee</small>
+        <em class="ai-note note-down">watch this</em>
+      </article>
+      <article class="kpi-card">
+        <span>CPA moyen</span>
+        <strong>45 MAD</strong>
+        <small class="up">Objectif: 50 MAD</small>
+      </article>
+      <article class="kpi-card">
+        <span>Conversions</span>
+        <strong>847</strong>
+        <small class="up">+12% vs J-7</small>
+      </article>
+      <article class="kpi-card">
+        <span>Alertes IA</span>
+        <strong>2</strong>
+        <small>1 action prioritaire</small>
+      </article>
+    </section>
+
+    <section class="dashboard-grid">
+      <section class="main-column">
+        <article class="analytics-card chart-card">
+          <div class="card-header">
+            <div>
+              <p class="eyebrow">Performance trend</p>
+              <h2>ROAS et CPA sur 14 jours</h2>
+            </div>
+            <span class="chip">Meta + Google</span>
+          </div>
+
+          <div class="chart-area" aria-label="Graphique performance">
+            <div class="bars" aria-hidden="true">
+              <span style="height: 46%"></span>
+              <span style="height: 58%"></span>
+              <span style="height: 52%"></span>
+              <span style="height: 66%"></span>
+              <span style="height: 73%"></span>
+              <span style="height: 62%"></span>
+              <span style="height: 48%"></span>
+              <span style="height: 42%"></span>
+              <span style="height: 54%"></span>
+              <span style="height: 61%"></span>
+              <span style="height: 70%"></span>
+              <span style="height: 76%"></span>
+            </div>
+            <div class="trend-line" aria-hidden="true"></div>
+            <em class="annotation chart-note">seasonality impact</em>
+          </div>
+
+          <div class="legend">
+            <span><i class="roas"></i> ROAS</span>
+            <span><i class="cpa"></i> CPA pressure</span>
+            <span><i class="alert"></i> Fatigue signal</span>
+          </div>
+        </article>
+
+        <article class="analytics-card anomaly-card">
+          <div class="card-header">
+            <div>
+              <p class="eyebrow">Campaign Optimization</p>
+              <h2>Anomalies detectees</h2>
+            </div>
+            <span class="chip danger">Priority high</span>
+          </div>
+
+          <div class="anomaly-list">
+            <div class="anomaly-row critical">
+              <span class="severity"></span>
+              <div>
+                <strong>CTR Meta Retargeting : 0.8% vers 0.3%</strong>
+                <p>Chute de 62% en 48h. Isolation Forest score : 0.87.</p>
+              </div>
+              <em>CTR dropping</em>
+            </div>
+
+            <div class="anomaly-row">
+              <span class="severity"></span>
+              <div>
+                <strong>CPA : 45 MAD vers 89 MAD</strong>
+                <p>Hausse de 98%, tendance confirmee par Prophet.</p>
+              </div>
+            </div>
+
+            <div class="anomaly-row">
+              <span class="severity"></span>
+              <div>
+                <strong>Impressions -35%</strong>
+                <p>Signal de fatigue publicitaire, frequence moyenne 7.2x.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="analytics-card table-card">
+          <div class="card-header">
+            <div>
+              <p class="eyebrow">Campaign watchlist</p>
+              <h2>Campagnes surveillees</h2>
+            </div>
+          </div>
+
+          <div class="campaign-table">
+            <div class="table-row table-head">
+              <span>Campagne</span>
+              <span>Plateforme</span>
+              <span>Score</span>
+              <span>Status</span>
+            </div>
+            <div class="table-row">
+              <span>Retargeting ete 2025</span>
+              <span>Meta Ads</span>
+              <span>23</span>
+              <strong class="status critical">Critical</strong>
+            </div>
+            <div class="table-row">
+              <span>Search brand</span>
+              <span>Google Ads</span>
+              <span>84</span>
+              <strong class="status healthy">Healthy</strong>
+            </div>
+            <div class="table-row">
+              <span>Ecommerce ete</span>
+              <span>Meta Ads</span>
+              <span>52</span>
+              <strong class="status warning">Warning</strong>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <aside class="side-column">
+        <article class="analytics-card health-card">
+          <p class="eyebrow">Campaign Health</p>
+          <div class="score-wrap">
+            <div class="score-ring">23</div>
+            <div>
+              <h2>Critical</h2>
+              <p>Action requise sur Meta Retargeting.</p>
+            </div>
+          </div>
+          <em class="annotation health-note">creative fatigue</em>
+        </article>
+
+        <article class="analytics-card causal-card">
+          <p class="eyebrow">Root Cause Analysis</p>
+          <h2>Cause principale</h2>
+          <p>
+            L'audience cible a ete exposee en moyenne 7.2x aux memes creatifs
+            sur 14 jours, entrainant baisse CTR et hausse CPA.
+          </p>
+          <div class="causal-tags">
+            <span>Frequency 7.2x</span>
+            <span>Audience saturated</span>
+            <span>CTR -62%</span>
+          </div>
+        </article>
+
+        <article class="analytics-card rl-card">
+          <div class="card-header compact">
+            <div>
+              <p class="eyebrow">AI Recommended Action</p>
+              <h2>Action prioritaire</h2>
+            </div>
+            <span class="chip success">RL optimized</span>
+          </div>
+          <p>
+            Renouveler les creatifs, limiter la frequence et reallouer 40%
+            du budget vers Google Search.
+          </p>
+          <div class="impact-grid">
+            <span><b>ROAS</b> 3.6x</span>
+            <span><b>CPA</b> 42 MAD</span>
+          </div>
+          <button type="button">Appliquer la recommandation</button>
+        </article>
+
+        <article class="analytics-card xai-card">
+          <p class="eyebrow">Decision Insights</p>
+          <h2>Pourquoi cette decision ?</h2>
+          <div class="xai-bars">
+            <div><span>Frequence exposition</span><i style="width: 88%"></i><b>88%</b></div>
+            <div><span>CTR 7 jours</span><i style="width: 74%"></i><b>74%</b></div>
+            <div><span>CPA moyen</span><i style="width: 61%"></i><b>61%</b></div>
+            <div><span>Budget utilise</span><i style="width: 43%"></i><b>43%</b></div>
+          </div>
+        </article>
+
+        <article class="analytics-card case-two-card">
+          <p class="eyebrow">Campaign Planner</p>
+          <h2>Nouvelle campagne</h2>
+          <p>Generer une strategie initiale avec budget, objectif, plateforme et produit.</p>
+          <a routerLink="/campaign-planner">Configurer une campagne</a>
+        </article>
+      </aside>
+    </section>
+</main>

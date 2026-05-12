@@ -1,0 +1,116 @@
+<main class="connect-page">
+  <section class="connect-shell">
+    <aside class="setup-panel">
+      <header class="connect-header">
+        <a routerLink="/">AdOptimizer AI</a>
+        <span>Etape 2 / 4</span>
+      </header>
+
+      <div class="setup-copy">
+        <p class="eyebrow">Campaign Intelligence Setup</p>
+        <h1>Connectez vos sources Ads pour lancer l'audit intelligent.</h1>
+        <p>
+          AdOptimizer AI utilise les donnees Google Ads et Meta Ads pour calculer
+          les scores sante, detecter les anomalies et generer des recommandations explicables.
+        </p>
+      </div>
+
+      <div class="audit-preview">
+        <div class="preview-top">
+          <span>AI Audit Preview</span>
+          <strong>Preparing scan</strong>
+        </div>
+
+        <div class="scan-card">
+          <div class="scan-orbit" aria-hidden="true">
+            <span></span>
+          </div>
+          <div>
+            <strong>Data readiness</strong>
+            <p>Waiting for platform authorization.</p>
+          </div>
+        </div>
+
+        <div class="audit-metrics">
+          <article>
+            <span>Health Score</span>
+            <strong>--</strong>
+          </article>
+          <article>
+            <span>Budget Waste</span>
+            <strong>Scan</strong>
+          </article>
+          <article>
+            <span>XAI Insights</span>
+            <strong>Ready</strong>
+          </article>
+        </div>
+      </div>
+
+      <div class="trust-box">
+        <strong>Secure OAuth access</strong>
+        <p>Read-only onboarding audit. No campaign modification during setup.</p>
+      </div>
+    </aside>
+
+    <section class="platform-panel">
+      <div class="panel-heading">
+        <p class="eyebrow">Connexion plateformes</p>
+        <h2>Autorisez les comptes publicitaires a analyser.</h2>
+        <p>Vous pourrez consulter les performances et recommandations apres l'audit.</p>
+      </div>
+
+      <div class="platform-grid">
+        <article class="platform-card">
+          <div class="platform-top">
+            <div class="platform-icon meta">M</div>
+            <span class="status ready">Ready to connect</span>
+          </div>
+          <h3>Meta Ads</h3>
+          <p>Campagnes Facebook, Instagram, Reels, Stories et retargeting.</p>
+          <div class="capabilities">
+            <span>CTR</span>
+            <span>CPA</span>
+            <span>Frequency</span>
+          </div>
+          <button type="button">Connecter Meta Ads</button>
+        </article>
+
+        <article class="platform-card">
+          <div class="platform-top">
+            <div class="platform-icon google">G</div>
+            <span class="status ready">Ready to connect</span>
+          </div>
+          <h3>Google Ads</h3>
+          <p>Search, performance, CPC, conversions, ROAS et budget allocation.</p>
+          <div class="capabilities">
+            <span>ROAS</span>
+            <span>CPC</span>
+            <span>Search</span>
+          </div>
+          <button type="button">Connecter Google Ads</button>
+        </article>
+      </div>
+
+      <div class="onboarding-flow" aria-label="Parcours onboarding">
+        <div class="step done"><span>1</span><p>Login</p></div>
+        <div class="step active"><span>2</span><p>Connect Ads</p></div>
+        <div class="step"><span>3</span><p>AI Audit</p></div>
+        <div class="step"><span>4</span><p>Dashboard</p></div>
+      </div>
+
+      <button
+        class="primary-action"
+        type="button"
+        [disabled]="isStartingAudit"
+        (click)="startIntelligentAudit()"
+      >
+        {{ isStartingAudit ? "Lancement de l'audit..." : "Demarrer l'audit intelligent" }}
+      </button>
+
+      @if (auditError) {
+        <p class="audit-feedback error">{{ auditError }}</p>
+      }
+    </section>
+  </section>
+</main>

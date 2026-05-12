@@ -1,0 +1,199 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  .wrap { padding: 1.5rem 0; }
+  h2.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead tr { background: var(--color-background-secondary); }
+  th { padding: 10px 12px; text-align: left; font-weight: 500; font-size: 12px; color: var(--color-text-secondary); border-bottom: 0.5px solid var(--color-border-secondary); white-space: nowrap; }
+  td { padding: 10px 12px; vertical-align: top; border-bottom: 0.5px solid var(--color-border-tertiary); line-height: 1.5; }
+  tr:last-child td { border-bottom: none; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; white-space: nowrap; margin: 2px 2px 2px 0; }
+  .b-green  { background: #EAF3DE; color: #3B6D11; }
+  .b-blue   { background: #E6F1FB; color: #185FA5; }
+  .b-purple { background: #EEEDFE; color: #3C3489; }
+  .b-gray   { background: #F1EFE8; color: #444441; }
+  .b-amber  { background: #FAEEDA; color: #854F0B; }
+  .b-teal   { background: #E1F5EE; color: #085041; }
+  @media (prefers-color-scheme: dark) {
+    .b-green  { background: #27500A; color: #C0DD97; }
+    .b-blue   { background: #0C447C; color: #B5D4F4; }
+    .b-purple { background: #3C3489; color: #CECBF6; }
+    .b-gray   { background: #444441; color: #D3D1C7; }
+    .b-amber  { background: #633806; color: #FAC775; }
+    .b-teal   { background: #085041; color: #9FE1CB; }
+  }
+  .type-label { font-weight: 500; font-size: 13px; display: block; margin-bottom: 4px; }
+  .type-1 { color: #3B6D11; }
+  .type-2 { color: #185FA5; }
+  .type-3 { color: #3C3489; }
+  @media (prefers-color-scheme: dark) {
+    .type-1 { color: #C0DD97; }
+    .type-2 { color: #B5D4F4; }
+    .type-3 { color: #CECBF6; }
+  }
+  .sub { font-size: 11px; color: var(--color-text-secondary); margin-top: 3px; }
+  .flux { font-size: 11px; color: var(--color-text-tertiary); margin-top: 4px; font-style: italic; }
+  .cross { font-size: 11px; color: var(--color-text-tertiary); }
+  .tool-row { display: flex; flex-direction: column; gap: 3px; }
+  .agent-block { display: flex; flex-direction: column; gap: 4px; }
+  .agent-item { display: flex; align-items: flex-start; gap: 6px; }
+  .role-label { font-size: 11px; color: var(--color-text-secondary); }
+  .divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 6px 0; }
+  .persona-box { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-secondary); border-radius: 6px; padding: 8px 10px; margin-top: 6px; font-size: 11px; }
+  .persona-title { font-weight: 500; font-size: 11px; color: var(--color-text-primary); margin-bottom: 4px; }
+  .persona-item { display: flex; align-items: flex-start; gap: 6px; margin-top: 3px; color: var(--color-text-secondary); }
+  .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; flex-shrink: 0; margin-top: 3px; }
+  .dot-purple { background: #7F77DD; }
+  .dot-teal   { background: #1D9E75; }
+  .highlight-row { background: color-mix(in srgb, var(--color-background-secondary) 60%, transparent); }
+  .key-badge { background: #EEEDFE; color: #3C3489; font-size: 10px; padding: 1px 6px; border-radius: 3px; font-weight: 500; vertical-align: middle; margin-left: 4px; }
+  @media (prefers-color-scheme: dark) {
+    .key-badge { background: #3C3489; color: #CECBF6; }
+  }
+</style>
+
+<div class="wrap">
+  <h2 class="sr-only">Tableau architecture — Type 3 Simulation What-If avec personas intégrés</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:13%">Type</th>
+        <th style="width:20%">Contexte &amp; personas</th>
+        <th style="width:22%">Agents impliqués</th>
+        <th style="width:30%">Tools IA utilisés</th>
+        <th style="width:15%">Exclusions</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- TYPE 1 -->
+      <tr>
+        <td>
+          <span class="badge b-green">Type 1</span>
+          <span class="type-label type-1">Optimisation<br>campagne existante</span>
+          <div class="flux">Agent 3 → Agent 2 → Agent 1</div>
+        </td>
+        <td>
+          Campagne déjà <strong>active</strong>.<br>
+          <span class="sub">Le système surveille, détecte une anomalie et propose une correction.</span>
+        </td>
+        <td>
+          <div class="agent-block">
+            <div class="agent-item"><span class="badge b-green">Principal</span><span class="role-label"><strong>Agent 3 — Monitoring</strong><br>Surveille &amp; détecte anomalies</span></div>
+            <div class="agent-item"><span class="badge b-gray">Décision</span><span class="role-label"><strong>Agent 2 — Décideur</strong><br>Choisit la recommandation</span></div>
+            <div class="agent-item"><span class="badge b-gray">Interface</span><span class="role-label"><strong>Agent 1 — Consultant</strong><br>Explique à l'utilisateur</span></div>
+          </div>
+        </td>
+        <td>
+          <div class="tool-row">
+            <span class="badge b-green">Tool 1 — Prétraitement</span><span class="sub">Nettoyage données Ads</span>
+            <span class="badge b-green">Tool 5 — Détection anomalies</span><span class="sub">Identifier le problème</span>
+            <span class="badge b-green">Tool 6 — Corrélation inter-canaux</span><span class="sub">Comprendre interactions</span>
+            <span class="badge b-green">Tool 7 — Causal AI</span><span class="sub">Trouver la cause racine</span>
+            <span class="badge b-green">Tool 8 — Prédicteur ML / RL</span><span class="sub">Trouver la meilleure action</span>
+            <span class="badge b-green">Tool 10 — A/B Evaluator</span><span class="sub">Proposer test A/B</span>
+            <span class="badge b-green">Tool 11 — XAI</span><span class="sub">Expliquer le pourquoi</span>
+            <span class="badge b-green">Tool 12 — LLM</span><span class="sub">Générer recommandation lisible</span>
+          </div>
+        </td>
+        <td>
+          <span class="cross">❌ Digital Twin (T3)</span><br>
+          <span class="cross">❌ What-If (T9)</span>
+        </td>
+      </tr>
+
+      <!-- TYPE 2 -->
+      <tr>
+        <td>
+          <span class="badge b-blue">Type 2</span>
+          <span class="type-label type-2">Création<br>nouvelle campagne</span>
+          <div class="flux">Agent 1 → Agent 2 → Agent 1</div>
+        </td>
+        <td>
+          <strong>Aucune donnée</strong> existante.<br>
+          <span class="sub">Le système guide l'utilisateur pour construire une stratégie initiale simple et efficace.</span>
+        </td>
+        <td>
+          <div class="agent-block">
+            <div class="agent-item"><span class="badge b-blue">Principal</span><span class="role-label"><strong>Agent 1 — Consultant</strong><br>Recueille besoins utilisateur</span></div>
+            <div class="agent-item"><span class="badge b-gray">Décision</span><span class="role-label"><strong>Agent 2 — Décideur</strong><br>Sélectionne la stratégie</span></div>
+            <hr class="divider">
+            <span class="cross">❌ Agent 3 non utilisé</span>
+          </div>
+        </td>
+        <td>
+          <div class="tool-row">
+            <span class="badge b-blue">Tool 2 — Segmentation</span><span class="sub">Identifier l'audience cible</span>
+            <span class="badge b-blue">Tool 6 — Corrélation inter-canaux</span><span class="sub">Choisir le bon canal</span>
+            <span class="badge b-blue">Tool 4 — Prédicteur ML (basique)</span><span class="sub">Estimation de performance</span>
+            <span class="badge b-blue">Tool 11 — XAI</span><span class="sub">Justification des choix</span>
+            <span class="badge b-blue">Tool 12 — LLM</span><span class="sub">Générer le contenu stratégique</span>
+          </div>
+        </td>
+        <td>
+          <span class="cross">❌ Test A/B (T10)</span><br>
+          <span class="cross">❌ Digital Twin (T3)</span><br>
+          <span class="cross">❌ RL (T8)</span><br>
+          <span class="cross">❌ What-If (T9)</span><br>
+          <span class="cross">❌ Causal AI (T7)</span><br>
+          <span class="cross">❌ Anomalies (T5)</span>
+        </td>
+      </tr>
+
+      <!-- TYPE 3 — UPDATED WITH PERSONAS -->
+      <tr class="highlight-row">
+        <td>
+          <span class="badge b-purple">Type 3</span>
+          <span class="type-label type-3">Simulation<br>What-If</span>
+          <div class="flux">Agent 1 → Agent 2 → Agent 1</div>
+        </td>
+        <td>
+          L'utilisateur veut <strong>tester un changement</strong> hypothétique.<br>
+          <span class="sub">Le système simule l'impact avant toute action réelle.</span>
+
+          <div class="persona-box">
+            <div class="persona-title">Personas en entrée <span class="key-badge">nouveau</span></div>
+            <div class="sub" style="margin-bottom:5px;">Réutilisés depuis la segmentation — pas recréés ici.</div>
+            <div class="persona-item">
+              <span class="dot dot-purple"></span>
+              <span><strong>P1 — Jeunes (18–25)</strong> : forte interaction, +clics, +visibilité</span>
+            </div>
+            <div class="persona-item">
+              <span class="dot dot-teal"></span>
+              <span><strong>P2 — Adultes (25–35)</strong> : forte conversion, +achats</span>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="agent-block">
+            <div class="agent-item"><span class="badge b-purple">Entrée</span><span class="role-label"><strong>Agent 1 — Consultant</strong><br>Comprend la demande utilisateur</span></div>
+            <div class="agent-item"><span class="badge b-purple">Principal</span><span class="role-label"><strong>Agent 2 — Décideur</strong><br>Simule l'impact par persona &amp; génère la reco</span></div>
+            <hr class="divider">
+            <span class="cross">❌ Agent 3 non utilisé<br>(pas de monitoring temps réel)</span>
+          </div>
+        </td>
+        <td>
+          <div class="tool-row">
+            <span class="badge b-purple">Tool 1 — Prétraitement</span><span class="sub">Préparer données + organiser par persona</span>
+            <span class="badge b-purple">Tool 3 — Digital Twin <span class="key-badge">clé</span></span><span class="sub">Simuler comportement par persona séparément</span>
+            <span class="badge b-purple">Tool 4 — Prédicteur ML</span><span class="sub">Estimer performance par segment</span>
+            <span class="badge b-purple">Tool 9 — Simulateur What-If <span class="key-badge">clé</span></span><span class="sub">Tester scénario global + par persona</span>
+            <span class="badge b-purple">Tool 10 — A/B Evaluator</span><span class="sub">Activer si résultats proches entre personas</span>
+            <span class="badge b-purple">Tool 11 — XAI</span><span class="sub">Expliquer résultats par persona</span>
+            <span class="badge b-purple">Tool 12 — LLM</span><span class="sub">Générer réponse utilisateur</span>
+          </div>
+        </td>
+        <td>
+          <span class="cross">❌ Segmentation (T2)</span><br>
+          <span class="cross">❌ Anomalies (T5)</span><br>
+          <span class="cross">❌ Corrélation (T6)</span><br>
+          <span class="cross">❌ Causal AI (T7)</span><br>
+          <span class="cross">❌ RL (T8)</span>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>

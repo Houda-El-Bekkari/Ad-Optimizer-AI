@@ -1,0 +1,170 @@
+<main class="page">
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">Campaign Optimization</p>
+      <h1>Optimisation campagne existante</h1>
+      <p class="muted">Surveillance des KPIs, detection d'anomalies et action recommandee.</p>
+    </div>
+    <span class="pill">{{ campaignLabel }}</span>
+  </header>
+
+  @if (loading) {
+    <article class="card state-card">
+      <p class="eyebrow">Synchronisation</p>
+      <h2>Chargement des resultats d'optimisation...</h2>
+      <p>Lecture des dernieres donnees stockees dans campaign_optimization_dashboard.</p>
+    </article>
+  } @else if (error) {
+    <article class="card state-card error-state">
+      <p class="eyebrow">Connexion donnees</p>
+      <h2>Resultats indisponibles</h2>
+      <p>{{ error }}</p>
+      <button class="primary" type="button" (click)="loadDashboard()">Reessayer</button>
+    </article>
+  } @else if (primary) {
+    @if (records.length > 1) {
+      <section class="channel-overview">
+        <div>
+          <p class="eyebrow">Multi-channel monitoring</p>
+          <h2>{{ primary.global_campaign_id || "Campagne globale" }}</h2>
+          <p>Cette campagne est surveillee sur plusieurs canaux. Selectionnez Meta Ads ou Google Ads pour inspecter ses KPIs et ses anomalies.</p>
+        </div>
+
+        <div class="channel-grid">
+          @for (record of records; track recordKey(record)) {
+            <button
+              class="channel-card"
+              type="button"
+              [class.active]="recordKey(record) === selectedKey"
+              (click)="selectRecord(record)"
+            >
+              <span>{{ platformLabel(record.platform) }}</span>
+              <strong>{{ record.campaign_id }}</strong>
+              <small>Health {{ displayNumber(record.health_score) }} - {{ record.health_status || "UNKNOWN" }}</small>
+            </button>
+          }
+        </div>
+      </section>
+    }
+
+    <section class="metric-grid">
+      <article class="metric-card">
+        <span>Health Score - {{ selectedChannelLabel }}</span>
+        <strong>{{ displayNumber(primary.health_score) }}</strong>
+        <small>{{ healthStatus }}</small>
+      </article>
+      <article class="metric-card">
+        <span>ROAS actuel</span>
+        <strong>{{ displayRoas(currentKpis["roas"]) }}</strong>
+        <small>Prediction J+14: {{ displayRoas(predictedKpis["roas_h14"]) }}</small>
+      </article>
+      <article class="metric-card">
+        <span>Conversions</span>
+        <strong>{{ displayNumber(currentKpis["conversions"]) }}</strong>
+        <small>Prediction J+14: {{ displayNumber(predictedKpis["conversions_h14"]) }}</small>
+      </article>
+      <article class="metric-card">
+        <span>Spend moyen</span>
+        <strong>{{ displayNumber(currentKpis["spend"]) }}</strong>
+        <small>CPA prevu: {{ displayNumber(predictedKpis["cpa_h14"]) }}</small>
+      </article>
+    </section>
+
+    <section class="split-grid">
+      <div class="panel-grid">
+        <article class="card">
+          <div class="card-header">
+            <div>
+              <p class="eyebrow">Anomaly Detection</p>
+              <h2>Anomalies prioritaires</h2>
+              <p class="muted">{{ selectedChannelLabel }}</p>
+            </div>
+            <span class="chip danger">{{ primary.anomaly_level || healthStatus }}</span>
+          </div>
+
+          <div class="timeline">
+            @for (anomaly of topAnomalies; track anomaly["date"]) {
+              <div class="timeline-item">
+                <h3>{{ anomalyTitle(anomaly) }}</h3>
+                <p>{{ anomalyMeta(anomaly) }}</p>
+              </div>
+            } @empty {
+              <div class="timeline-item">
+                <h3>Aucune anomalie prioritaire</h3>
+                <p>Le dernier audit n'a pas retourne d'anomalie persistante prioritaire.</p>
+              </div>
+            }
+          </div>
+        </article>
+
+        <article class="card">
+          <p class="eyebrow">KPI Monitoring</p>
+          <h2>Tendance recente</h2>
+          <div class="monitor-grid">
+            <span><b>ROAS</b>{{ displayPercent(trend["roas_trend_pct"]) }}</span>
+            <span><b>Conversions</b>{{ displayPercent(trend["conversions_trend_pct"]) }}</span>
+            <span><b>Spend</b>{{ displayPercent(trend["spend_trend_pct"]) }}</span>
+          </div>
+          <div class="action-row">
+            @for (type of anomalyTypes; track type) {
+              <span class="chip">{{ type }}</span>
+            } @empty {
+              <span class="chip">Monitoring actif</span>
+            }
+          </div>
+        </article>
+      </div>
+
+      <aside class="panel-grid">
+        <article class="hero-card">
+          <p class="eyebrow">AI Recommended Action</p>
+          <h2>{{ actionTitle }}</h2>
+          <p>{{ primary.dashboard_summary || "Aucune action prioritaire disponible pour le moment." }}</p>
+          <div class="business-advice">
+            <span>Conseil business</span>
+            <strong>{{ businessAdvice }}</strong>
+          </div>
+          <div class="metric-grid compact-metrics">
+            <article class="metric-card">
+              <span>ROAS prevu</span>
+              <strong>{{ displayRoas(expectedImpact["expected_roas"]) }}</strong>
+            </article>
+            <article class="metric-card">
+              <span>Conversions prevues</span>
+              <strong>{{ displayNumber(expectedImpact["expected_conversions"]) }}</strong>
+            </article>
+          </div>
+          <div class="action-row">
+            <button class="primary" type="button">Appliquer</button>
+            <button type="button">Ignorer</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <p class="eyebrow">Audit Status</p>
+          <h2>Resultats synchronises</h2>
+          <div class="bars">
+            <div class="bar">
+              <span>Prediction score</span>
+              <i [style.width.%]="primary.health_score || 0"></i>
+            </div>
+            <div class="bar">
+              <span>Anomaly score</span>
+              <i [style.width.%]="primary.anomaly_score || 0"></i>
+            </div>
+            <div class="bar">
+              <span>Confiance causale</span>
+              <i [style.width.%]="(primary.causal_confidence || 0) * 100"></i>
+            </div>
+          </div>
+        </article>
+      </aside>
+    </section>
+  } @else {
+    <article class="card state-card">
+      <p class="eyebrow">Aucun audit</p>
+      <h2>Aucun resultat trouve</h2>
+      <p>Lancez d'abord l'audit depuis la page de connexion plateformes.</p>
+    </article>
+  }
+</main>
