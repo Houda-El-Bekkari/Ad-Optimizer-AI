@@ -1,0 +1,238 @@
+{
+    "name":  "LLM_Agent_Consultant_Fixed",
+    "nodes":  [
+                  {
+                      "parameters":  {
+                                         "httpMethod":  "POST",
+                                         "path":  "llm-chatbot",
+                                         "responseMode":  "responseNode",
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.webhook",
+                      "typeVersion":  2.1,
+                      "position":  [
+                                       0,
+                                       0
+                                   ],
+                      "id":  "030b51b5-5776-459b-8af3-c6858113de1a",
+                      "name":  "Webhook - User Question",
+                      "webhookId":  "llm-chatbot-webhook"
+                  },
+                  {
+                      "parameters":  {
+                                         "operation":  "select",
+                                         "schema":  {
+                                                        "__rl":  true,
+                                                        "mode":  "list",
+                                                        "value":  "public"
+                                                    },
+                                         "table":  {
+                                                       "__rl":  true,
+                                                       "value":  "optimization_results",
+                                                       "mode":  "list"
+                                                   },
+                                         "limit":  5,
+                                         "sort":  {
+                                                      "values":  [
+                                                                     {
+                                                                         "column":  "created_at",
+                                                                         "direction":  "DESC"
+                                                                     }
+                                                                 ]
+                                                  },
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.postgres",
+                      "typeVersion":  2.6,
+                      "position":  [
+                                       272,
+                                       0
+                                   ],
+                      "id":  "fd3f9053-5cf5-4561-9e2f-984ab0223277",
+                      "name":  "Get Recent Optimizations",
+                      "credentials":  {
+                                          "postgres":  {
+                                                           "id":  "Ja4sHGYHbbKtM2bq",
+                                                           "name":  "Postgres account 2"
+                                                       }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "jsCode":  "const campaigns = items.map(i =\u003e i.json);\n\n// Important: lire la question depuis le node Webhook, pas depuis les lignes PostgreSQL.\nconst webhookPayload = $(\u0027Webhook - User Question\u0027).first().json || {};\nconst body = webhookPayload.body || {};\n\nconst question = body.question || webhookPayload.question || \"Analyse des campagnes recentes\";\nconst mode = body.mode || webhookPayload.mode || \"auto\";\n\nif (!question || !String(question).trim()) {\n  throw new Error(\"Question manquante dans le body du webhook\");\n}\n\nreturn [{\n  json: {\n    context: campaigns,\n    question: String(question).trim(),\n    mode: String(mode).toLowerCase()\n  }\n}];"
+                                     },
+                      "type":  "n8n-nodes-base.code",
+                      "typeVersion":  2,
+                      "position":  [
+                                       480,
+                                       0
+                                   ],
+                      "id":  "ce05a04e-41d7-4af6-bc7f-675c92e041d9",
+                      "name":  "Prepare LLM Context"
+                  },
+                  {
+                      "parameters":  {
+                                         "method":  "POST",
+                                         "url":  "http://127.0.0.1:8000/llm",
+                                         "sendBody":  true,
+                                         "bodyParameters":  {
+                                                                "parameters":  [
+                                                                                   {
+                                                                                       "name":  "question",
+                                                                                       "value":  "={{ $json.question }}"
+                                                                                   },
+                                                                                   {
+                                                                                       "name":  "mode",
+                                                                                       "value":  "={{ $json.mode }}"
+                                                                                   },
+                                                                                   {
+                                                                                       "name":  "context",
+                                                                                       "value":  "={{ $json.context }}"
+                                                                                   }
+                                                                               ]
+                                                            },
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.httpRequest",
+                      "typeVersion":  4.4,
+                      "position":  [
+                                       688,
+                                       0
+                                   ],
+                      "id":  "326257e8-bdb8-41aa-82b0-e4ab12d2e29a",
+                      "name":  "Call LLM Endpoint"
+                  },
+                  {
+                      "parameters":  {
+                                         "respondWith":  "json",
+                                         "responseBody":  "={{ $json }}",
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "type":  "n8n-nodes-base.respondToWebhook",
+                      "typeVersion":  1.1,
+                      "position":  [
+                                       896,
+                                       0
+                                   ],
+                      "id":  "34af942a-0713-4ffb-b339-ebd0a5f43c52",
+                      "name":  "Send LLM Response"
+                  },
+                  {
+                      "parameters":  {
+                                         "content":  "## Interface angulare",
+                                         "height":  272,
+                                         "width":  272,
+                                         "color":  4
+                                     },
+                      "type":  "n8n-nodes-base.stickyNote",
+                      "position":  [
+                                       -80,
+                                       -80
+                                   ],
+                      "typeVersion":  1,
+                      "id":  "20960d59-6d3b-4b61-bf4e-d76f6045951d",
+                      "name":  "Sticky Note"
+                  },
+                  {
+                      "parameters":  {
+                                         "content":  "## LLM \nrepondre aux question utilisateur avec XAI ou RAG\n",
+                                         "height":  288,
+                                         "width":  576
+                                     },
+                      "type":  "n8n-nodes-base.stickyNote",
+                      "position":  [
+                                       240,
+                                       -80
+                                   ],
+                      "typeVersion":  1,
+                      "id":  "1b053ac4-588d-4df1-b0d7-5873838f1f73",
+                      "name":  "Sticky Note1"
+                  },
+                  {
+                      "parameters":  {
+                                         "content":  "## Interface angulare",
+                                         "height":  240,
+                                         "color":  4
+                                     },
+                      "type":  "n8n-nodes-base.stickyNote",
+                      "position":  [
+                                       848,
+                                       -80
+                                   ],
+                      "typeVersion":  1,
+                      "id":  "4e951bbd-dece-4bd0-83c9-0142897ee476",
+                      "name":  "Sticky Note2"
+                  }
+              ],
+    "pinData":  {
+
+                },
+    "connections":  {
+                        "Webhook - User Question":  {
+                                                        "main":  [
+                                                                     [
+                                                                         {
+                                                                             "node":  "Get Recent Optimizations",
+                                                                             "type":  "main",
+                                                                             "index":  0
+                                                                         }
+                                                                     ]
+                                                                 ]
+                                                    },
+                        "Get Recent Optimizations":  {
+                                                         "main":  [
+                                                                      [
+                                                                          {
+                                                                              "node":  "Prepare LLM Context",
+                                                                              "type":  "main",
+                                                                              "index":  0
+                                                                          }
+                                                                      ]
+                                                                  ]
+                                                     },
+                        "Prepare LLM Context":  {
+                                                    "main":  [
+                                                                 [
+                                                                     {
+                                                                         "node":  "Call LLM Endpoint",
+                                                                         "type":  "main",
+                                                                         "index":  0
+                                                                     }
+                                                                 ]
+                                                             ]
+                                                },
+                        "Call LLM Endpoint":  {
+                                                  "main":  [
+                                                               [
+                                                                   {
+                                                                       "node":  "Send LLM Response",
+                                                                       "type":  "main",
+                                                                       "index":  0
+                                                                   }
+                                                               ]
+                                                           ]
+                                              }
+                    },
+    "active":  false,
+    "settings":  {
+                     "executionOrder":  "v1",
+                     "binaryMode":  "separate",
+                     "availableInMCP":  false
+                 },
+    "versionId":  "443fd46c-7a07-40cf-9d85-bc6533420a6e",
+    "meta":  {
+                 "instanceId":  "5e10012b9ee2cf121bf6ce7a39b9b9e412de2ac42b12f20211b9498534c9b9c6"
+             },
+    "id":  "wKnpriBE1YS02QF2",
+    "tags":  [
+
+             ]
+}

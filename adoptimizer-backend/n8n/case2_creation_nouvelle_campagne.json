@@ -1,0 +1,232 @@
+{
+  "name": "Case2 - Creation Nouvelle Campagne",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "case2-creation-nouvelle-campagne",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "d91e2783-4e40-4db0-8a49-8a7208c3a701",
+      "name": "Webhook - Angular",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -720,
+        0
+      ],
+      "webhookId": "case2-creation-nouvelle-campagne"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/case2/strategy",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{JSON.stringify($node[\"Webhook - Angular\"].json.body || $json.body || $json)}}",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "id": "f5adcf59-8b8c-4cae-a50a-78e59cd89d3e",
+      "name": "Case2 - Strategy",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/case2/feature-engineering",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "id": "3597639f-a416-430d-957b-02f91e2bf284",
+      "name": "Case2 - Feature Engineering",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/case2/prediction",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "id": "6d472c71-754d-4cc0-a4a3-f044e7ce5d4f",
+      "name": "Case2 - Prediction",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/case2/comparison",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "id": "73a0350a-b768-4174-855a-6ae7a6ccf95a",
+      "name": "Case2 - Comparison",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/case2/xai",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "id": "5f57df5a-5ab8-48e9-b015-c5bbfb949ff1",
+      "name": "Case2 - XAI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/case2/final-response",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "id": "a3e66cfd-c74b-475b-8b63-9e3260174884",
+      "name": "Case2 - Final Response",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        720,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json.data || $json}}",
+        "options": {}
+      },
+      "id": "32eb4835-2d7c-4d98-b675-fcb9c39ec4cd",
+      "name": "Return Final Recommendation",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        960,
+        0
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook - Angular": {
+      "main": [
+        [
+          {
+            "node": "Case2 - Strategy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Case2 - Strategy": {
+      "main": [
+        [
+          {
+            "node": "Case2 - Feature Engineering",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Case2 - Feature Engineering": {
+      "main": [
+        [
+          {
+            "node": "Case2 - Prediction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Case2 - Prediction": {
+      "main": [
+        [
+          {
+            "node": "Case2 - Comparison",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Case2 - Comparison": {
+      "main": [
+        [
+          {
+            "node": "Case2 - XAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Case2 - XAI": {
+      "main": [
+        [
+          {
+            "node": "Case2 - Final Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Case2 - Final Response": {
+      "main": [
+        [
+          {
+            "node": "Return Final Recommendation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4f6148f8-32ef-4977-9df9-4b738078ff90",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "case2-creation-nouvelle-campagne",
+  "tags": []
+}

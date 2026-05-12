@@ -1,0 +1,136 @@
+{
+  "name": "Case1 - Campaign Optimization Dashboard",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "case1-optimization-dashboard",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9f2be97f-b0de-4ec0-b6b7-8f3d259a1a16",
+      "name": "Webhook - Optimization Dashboard",
+      "webhookId": "case1-optimization-dashboard"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "campaign_optimization_dashboard",
+          "mode": "list",
+          "cachedResultName": "campaign_optimization_dashboard"
+        },
+        "limit": 20,
+        "sort": {
+          "values": [
+            {
+              "column": "created_at",
+              "direction": "DESC"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        256,
+        0
+      ],
+      "id": "dc1b908a-f58b-486b-a570-1ad43986b60a",
+      "name": "Get Campaign Optimization Dashboard",
+      "credentials": {
+        "postgres": {
+          "id": "Ja4sHGYHbbKtM2bq",
+          "name": "Postgres account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows = items.map(item => item.json);\nconst seen = new Set();\nconst latest = [];\n\nfor (const row of rows) {\n  const key = `${row.campaign_id}|${row.platform}`;\n  if (seen.has(key)) continue;\n  seen.add(key);\n  latest.push(row);\n}\n\nreturn [{\n  json: {\n    count: latest.length,\n    items: latest,\n    generated_at: new Date().toISOString()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        512,
+        0
+      ],
+      "id": "de61083d-a696-4280-af01-16b59d6756c9",
+      "name": "Prepare Dashboard Response"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        768,
+        0
+      ],
+      "id": "0f4d28c7-2b59-4928-bd44-7103c5ed82cb",
+      "name": "Send Dashboard Response"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook - Optimization Dashboard": {
+      "main": [
+        [
+          {
+            "node": "Get Campaign Optimization Dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Campaign Optimization Dashboard": {
+      "main": [
+        [
+          {
+            "node": "Prepare Dashboard Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Dashboard Response": {
+      "main": [
+        [
+          {
+            "node": "Send Dashboard Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b146de66-5c80-4f31-b48d-0f03adf4eb2a",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "case1-dashboard-read",
+  "tags": []
+}

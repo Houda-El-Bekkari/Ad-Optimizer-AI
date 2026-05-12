@@ -1,0 +1,14 @@
+venv/
+__pycache__/
+*.pyc
+
+app/data/digital_ads
+app/data/general_marketing
+app/data/strategic_marketing
+app/outputs/
+app/cas2-outputs/
+app/vector_db/
+
+app/models/*.pkl
+
+.env

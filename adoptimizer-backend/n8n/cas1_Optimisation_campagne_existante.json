@@ -1,0 +1,913 @@
+{
+  "name": "adoptimiser",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        192
+      ],
+      "id": "e23eb281-bc68-4cbd-a9a5-1791b123db0e",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "case1-optimization-campaign-existing",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -416,
+        0
+      ],
+      "id": "32a7d845-d231-4a3e-9cc2-5b0471afea71",
+      "name": "Webhook - Angular Campaign Optimization",
+      "webhookId": "case1-optimization-campaign-existing"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/data-collect",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -160,
+        192
+      ],
+      "id": "744733f5-6da9-4a00-b05e-631f54a40f32",
+      "name": "data_collect"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/preprocessing",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        96,
+        192
+      ],
+      "id": "35c99212-8728-433d-9b63-e101f2c5a927",
+      "name": "preprocessing"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        816,
+        160
+      ],
+      "id": "842e80bf-e31b-441c-abaa-06ced422c7d1",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/anomaly",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        368,
+        144
+      ],
+      "id": "1a77a358-9583-4813-94b7-9874f3f87d3e",
+      "name": "anomaly"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/correlation",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        672,
+        384
+      ],
+      "id": "0e053f7a-189c-4eeb-b692-481d3b9d1631",
+      "name": "correlation"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "25c3aa15-83b9-4a7f-af68-0280634a463c",
+              "leftValue": "true",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1232,
+        288
+      ],
+      "id": "5e62dd47-f9c5-4f0f-9773-b5c4d1ec35d9",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "content": "## 🟢 AGENT 3 — VIGILANT\n- Preprocessing\n- Anomaly Detection",
+        "height": 448,
+        "width": 512,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9aeb35f9-379e-45fa-ad61-c74516ef1429",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## 🔵 AGENT 2 — DÉCIDEUR\n- Correlation\n- Health Score (ML)\n- Causal AI\n- Optimizer (RL)",
+        "height": 560,
+        "width": 1264,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        560,
+        0
+      ],
+      "id": "db2a37eb-aaaf-4839-a301-ee5ce0dfcbcb",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/health-score",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1008,
+        160
+      ],
+      "id": "89d8fd46-8947-4ff0-8911-af0623de84ab",
+      "name": "Health score"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/causal",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1440,
+        144
+      ],
+      "id": "f771a4b2-5991-49b8-bdf1-3d2eb35c7744",
+      "name": "Causal AI"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/optimizer",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1680,
+        144
+      ],
+      "id": "2af53f09-0138-49b4-a9a0-994c9bb922e5",
+      "name": "RL Optimizer"
+    },
+    {
+      "parameters": {
+        "content": "## 🔵 Agent 1 Consultant \n- xai\n- function javascript \n- db postgres",
+        "height": 560,
+        "width": 864
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1920,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "7a06a84a-460f-4a2d-93bb-5433a8830f0e",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/xai",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2016,
+        144
+      ],
+      "id": "a1fcec30-069a-4ca8-a9b7-02d727e3d504",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "name",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "optimization_results",
+          "mode": "list",
+          "cachedResultName": "optimization_results"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "health_score": "={{$json.health_score}}",
+            "confidence": "={{$json.confidence}}",
+            "campaign_id": "={{$json.campaign_id}}",
+            "platform": "={{$json.platform}}",
+            "status": "={{$json.status}}",
+            "recommended_action": "={{$json.recommended_action}}",
+            "action_label": "={{$json.action_label}}",
+            "xai_summary": "={{$json.xai_summary}}",
+            "full_json": "={{$json.full_json}}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "campaign_id",
+              "displayName": "campaign_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "platform",
+              "displayName": "platform",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "health_score",
+              "displayName": "health_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "recommended_action",
+              "displayName": "recommended_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "action_label",
+              "displayName": "action_label",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "confidence",
+              "displayName": "confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "xai_summary",
+              "displayName": "xai_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "full_json",
+              "displayName": "full_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        2496,
+        144
+      ],
+      "id": "74c64919-b1b4-47be-ac21-b4370cd054c3",
+      "name": "Insert rows in a table",
+      "credentials": {
+        "postgres": {
+          "id": "Ja4sHGYHbbKtM2bq",
+          "name": "Postgres account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $json.data || $json;\nconst explanations = data.xai_explanations || [];\nconst generatedAt = data.metadata?.generated_at || new Date().toISOString();\nconst executionId = typeof $execution !== 'undefined' ? String($execution.id ?? '') : '';\n\nreturn explanations.map(x => {\n  const health = x.health_explanation || {};\n  const causal = x.causal_explanation || {};\n  const optimizer = x.optimizer_explanation || {};\n  const anomalyReport = x.anomaly_report || {};\n  const components = health.components || {};\n  const expectedImpact = optimizer.expected_impact || null;\n  const budgetAdjustment = optimizer.budget_adjustment || null;\n  const dashboardSummary = optimizer.summary || x.xai_summary || health.summary || '';\n\n  return {\n    json: {\n      workflow_execution_id: executionId,\n      global_campaign_id: x.global_campaign_id,\n      campaign_id: x.campaign_id,\n      platform: x.platform,\n\n      health_score: health.health_score,\n      status: health.status,\n      health_status: health.status,\n      anomaly_level: anomalyReport.global_level || health.severity,\n      anomaly_score: anomalyReport.anomaly_score ?? components.anomaly_score ?? null,\n      n_anomaly_days: anomalyReport.n_anomaly_days ?? health.anomaly?.n_anomalies ?? null,\n\n      current_kpis: health.current_kpis || null,\n      predicted_kpis: health.predicted_kpis || null,\n      trend: health.trend || null,\n      anomaly_types: { items: anomalyReport.anomaly_types || [] },\n      top_anomalies: { items: anomalyReport.top_anomalies || [] },\n\n      root_cause: causal.root_cause,\n      root_cause_label: causal.meaning,\n      causal_confidence: causal.confidence,\n\n      recommended_action: optimizer.recommended_action,\n      action_label: optimizer.action_label,\n      priority: anomalyReport.global_level || null,\n\n      expected_impact: expectedImpact,\n      budget_adjustment: budgetAdjustment,\n\n      confidence: causal.confidence,\n      xai_summary: x.xai_summary,\n      dashboard_summary: dashboardSummary,\n      full_json: x,\n      source_generated_at: x.generated_at || generatedAt\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2272,
+        304
+      ],
+      "id": "807eba92-91a5-449d-a609-2eb88a714116",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/dashboard-summary",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{JSON.stringify($json)}}",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2496,
+        336
+      ],
+      "id": "f2626b6d-19ab-4440-9952-5ff2caa7cc43",
+      "name": "Dashboard Summary LLM"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "name",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "campaign_optimization_dashboard",
+          "mode": "list",
+          "cachedResultName": "campaign_optimization_dashboard"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workflow_execution_id": "={{$json.workflow_execution_id}}",
+            "global_campaign_id": "={{$json.global_campaign_id}}",
+            "campaign_id": "={{$json.campaign_id}}",
+            "platform": "={{$json.platform}}",
+            "health_score": "={{$json.health_score}}",
+            "health_status": "={{$json.health_status}}",
+            "anomaly_level": "={{$json.anomaly_level}}",
+            "anomaly_score": "={{$json.anomaly_score}}",
+            "n_anomaly_days": "={{$json.n_anomaly_days}}",
+            "current_kpis": "={{$json.current_kpis}}",
+            "predicted_kpis": "={{$json.predicted_kpis}}",
+            "trend": "={{$json.trend}}",
+            "anomaly_types": "={{$json.anomaly_types}}",
+            "top_anomalies": "={{$json.top_anomalies}}",
+            "root_cause": "={{$json.root_cause}}",
+            "root_cause_label": "={{$json.root_cause_label}}",
+            "causal_confidence": "={{$json.causal_confidence}}",
+            "recommended_action": "={{$json.recommended_action}}",
+            "action_label": "={{$json.action_label}}",
+            "priority": "={{$json.priority}}",
+            "expected_impact": "={{$json.expected_impact}}",
+            "budget_adjustment": "={{$json.budget_adjustment}}",
+            "dashboard_summary": "={{$json.dashboard_summary}}",
+            "full_json": "={{$json.full_json}}",
+            "source_generated_at": "={{$json.source_generated_at}}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "workflow_execution_id",
+              "displayName": "workflow_execution_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "global_campaign_id",
+              "displayName": "global_campaign_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "campaign_id",
+              "displayName": "campaign_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "platform",
+              "displayName": "platform",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "health_score",
+              "displayName": "health_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "health_status",
+              "displayName": "health_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "anomaly_level",
+              "displayName": "anomaly_level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "anomaly_score",
+              "displayName": "anomaly_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "n_anomaly_days",
+              "displayName": "n_anomaly_days",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "current_kpis",
+              "displayName": "current_kpis",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "predicted_kpis",
+              "displayName": "predicted_kpis",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "trend",
+              "displayName": "trend",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "anomaly_types",
+              "displayName": "anomaly_types",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "top_anomalies",
+              "displayName": "top_anomalies",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "root_cause",
+              "displayName": "root_cause",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "root_cause_label",
+              "displayName": "root_cause_label",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "causal_confidence",
+              "displayName": "causal_confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "recommended_action",
+              "displayName": "recommended_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "action_label",
+              "displayName": "action_label",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "expected_impact",
+              "displayName": "expected_impact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "budget_adjustment",
+              "displayName": "budget_adjustment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "dashboard_summary",
+              "displayName": "dashboard_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "full_json",
+              "displayName": "full_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "source_generated_at",
+              "displayName": "source_generated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        2736,
+        336
+      ],
+      "id": "5aa5f9f1-78ec-4d03-88a8-d4070a443022",
+      "name": "Insert campaign optimization dashboard",
+      "credentials": {
+        "postgres": {
+          "id": "Ja4sHGYHbbKtM2bq",
+          "name": "Postgres account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "data_collect",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook - Angular Campaign Optimization": {
+      "main": [
+        [
+          {
+            "node": "data_collect",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "data_collect": {
+      "main": [
+        [
+          {
+            "node": "preprocessing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "preprocessing": {
+      "main": [
+        [
+          {
+            "node": "correlation",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "anomaly",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "anomaly": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "correlation": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Health score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Causal AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Health score": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Causal AI": {
+      "main": [
+        [
+          {
+            "node": "RL Optimizer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RL Optimizer": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Dashboard Summary LLM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dashboard Summary LLM": {
+      "main": [
+        [
+          {
+            "node": "Insert campaign optimization dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "5b739dee-b225-431f-8716-52c841f022b7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5e10012b9ee2cf121bf6ce7a39b9b9e412de2ac42b12f20211b9498534c9b9c6"
+  },
+  "id": "yOwyCmzEPB8YNVXe",
+  "tags": []
+}

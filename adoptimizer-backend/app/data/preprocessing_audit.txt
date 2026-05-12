@@ -1,0 +1,185 @@
+Pipeline démarré  : 2026-05-12 15:37:35.733583
+Input             : D:\AdOptimizerAI\adoptimizer-backend\app\data\raw_ads_dataset_strict.csv
+Output            : D:\AdOptimizerAI\adoptimizer-backend\app\data\dataset_model_ready.csv
+
+========================================================================
+PHASE 0 — CHARGEMENT & AUDIT QUALITÉ INITIAL
+========================================================================
+Lignes chargées       : 183
+Colonnes              : 42
+Plateformes           : {'meta': 92, 'google': 91}
+Campagnes globales    : 1
+Période               : 2024-01-01 → 2024-03-30
+
+Colonnes NA_platform  :
+  reach                  : 91
+  frequency              : 91
+  link_clicks            : 91
+  likes                  : 91
+  comments               : 91
+  shares                 : 91
+  post_engagement        : 91
+  video_views            : 91
+  add_to_cart            : 91
+  purchases              : 91
+  age                    : 91
+  gender                 : 91
+  network                : 92
+  keyword                : 92
+  match_type             : 92
+  search_term            : 92
+  quality_score          : 92
+
+NaN réels par colonne :
+  spend                  : 2 (1.09%)
+  impressions            : 3 (1.64%)
+  clicks                 : 2 (1.09%)
+  conversions            : 3 (1.64%)
+  conversion_value       : 2 (1.09%)
+  CTR                    : 5 (2.73%)
+  CPC                    : 1 (0.55%)
+  CPM                    : 2 (1.09%)
+  reach                  : 3 (1.64%)
+  frequency              : 1 (0.55%)
+  link_clicks            : 2 (1.09%)
+  likes                  : 1 (0.55%)
+  shares                 : 1 (0.55%)
+  post_engagement        : 1 (0.55%)
+  video_views            : 2 (1.09%)
+  add_to_cart            : 1 (0.55%)
+  purchases              : 2 (1.09%)
+
+========================================================================
+PHASE 1 — DÉDUPLICATION
+========================================================================
+Doublons supprimés    : 3
+Lignes restantes      : 180
+
+========================================================================
+PHASE 2 — MASQUES NA_PLATFORM
+========================================================================
+  Masque créé : has_reach | 1=90 | 0=90
+  Masque créé : has_frequency | 1=90 | 0=90
+  Masque créé : has_link_clicks | 1=90 | 0=90
+  Masque créé : has_likes | 1=90 | 0=90
+  Masque créé : has_comments | 1=90 | 0=90
+  Masque créé : has_shares | 1=90 | 0=90
+  Masque créé : has_post_engagement | 1=90 | 0=90
+  Masque créé : has_video_views | 1=90 | 0=90
+  Masque créé : has_add_to_cart | 1=90 | 0=90
+  Masque créé : has_purchases | 1=90 | 0=90
+  Masque créé : has_network | 1=90 | 0=90
+  Masque créé : has_keyword | 1=90 | 0=90
+  Masque créé : has_match_type | 1=90 | 0=90
+  Masque créé : has_search_term | 1=90 | 0=90
+  Masque créé : has_quality_score | 1=90 | 0=90
+
+========================================================================
+PHASE 3 — CORRECTIONS DE TYPE
+========================================================================
+  quality_score casté : 90 valeurs Google
+  Dates parsées OK
+
+========================================================================
+PHASE 4 — IMPUTATION NaN RÉELS
+========================================================================
+  spend                  : 2 NaN → 2 imputés
+  impressions            : 3 NaN → 3 imputés
+  clicks                 : 2 NaN → 2 imputés
+  conversions            : 3 NaN → 3 imputés
+  conversion_value       : 2 NaN → 2 imputés
+  CTR                    : 5 NaN → 5 imputés
+  CPC                    : 1 NaN → 1 imputés
+  CPM                    : 2 NaN → 2 imputés
+  reach                  : 3 NaN → 3 imputés
+  frequency              : 1 NaN → 1 imputés
+  link_clicks            : 2 NaN → 2 imputés
+  likes                  : 1 NaN → 1 imputés
+  shares                 : 1 NaN → 1 imputés
+  post_engagement        : 1 NaN → 1 imputés
+  video_views            : 2 NaN → 2 imputés
+  add_to_cart            : 1 NaN → 1 imputés
+  purchases              : 2 NaN → 2 imputés
+
+Total NaN imputés     : 34
+
+========================================================================
+PHASE 5 — VARIABLES BUSINESS CALCULÉES
+========================================================================
+  Variables créées : roas, cpa, ctr_calc, cpc_calc, conv_rate,
+                     cpm_calc, budget_utilization, revenue_per_click,
+                     ctr_delta
+
+  ROAS médian (global)       : 3.936
+  CPA médian (global)        : 21.68
+  Conv_rate médian (global)  : 0.0395
+
+========================================================================
+PHASE 6 — FEATURE ENGINEERING TEMPOREL
+========================================================================
+  Features date : day_of_week, is_weekend, week_of_year, month, quarter,
+                  campaign_age_days, days_to_end, encodages sin/cos
+
+  Lags créés    : 9 métriques × 3 lags
+  Rolling créés : 9 métriques × 3 × 2 (mean+std)
+  Trends créés  : 9 métriques × 1 trend7
+  Lags conversion_value : ['conversion_value_lag1', 'conversion_value_lag3', 'conversion_value_lag7']
+  (rolling/trend conversion_value exclus — trop colinéaires à target_roas)
+
+  Total features temporels : 93
+
+========================================================================
+PHASE 7 — ENCODAGE CATÉGORIEL (OrdinalEncoder)
+========================================================================
+  Colonnes encodées : ['campaign_objective', 'campaign_status', 'budget_type', 'device', 'location', 'ad_format', 'primary_text', 'age', 'gender', 'network', 'keyword', 'match_type', 'search_term']
+
+========================================================================
+PHASE 8 — CONSTRUCTION DES CIBLES
+========================================================================
+  target_roas_h3               : 174 lignes valides
+  target_roas_h7               : 166 lignes valides
+  target_roas_h14              : 152 lignes valides
+  target_conversions_h3        : 174 lignes valides
+  target_conversions_h7        : 166 lignes valides
+  target_conversions_h14       : 152 lignes valides
+  target_cpa_h3                : 174 lignes valides
+  target_cpa_h7                : 166 lignes valides
+  target_cpa_h14               : 152 lignes valides
+  target_ctr_h3                : 174 lignes valides
+  target_ctr_h7                : 166 lignes valides
+  target_ctr_h14               : 152 lignes valides
+  target_cpc_h3                : 174 lignes valides
+  target_cpc_h7                : 166 lignes valides
+  target_cpc_h14               : 152 lignes valides
+
+========================================================================
+PHASE 9 — FEATURES CROSS-PLATEFORME
+========================================================================
+  Features cross-plateforme créées : 24
+  Exemple : ['x_roas_meta_lag1', 'x_roas_google_lag1', 'x_roas_meta_lag3', 'x_roas_google_lag3']
+
+========================================================================
+PHASE 10 — NETTOYAGE FINAL & EXPORT
+========================================================================
+Lignes supprimées (0 target) : 6
+Lignes finales               : 174
+
+Lignes valides par horizon (perte en fin de série = NORMALE) :
+  Horizon J+3  (5 targets) : 174 lignes complètes | 0 sans target (0.0%) ← derniers 3j/campagne
+  Horizon J+7  (5 targets) : 166 lignes complètes | 8 sans target (4.6%) ← derniers 7j/campagne
+  Horizon J+14 (5 targets) : 152 lignes complètes | 22 sans target (12.6%) ← derniers 14j/campagne
+
+  ℹ️  La perte J+14 (~15% max) est attendue et correcte.
+     À l'entraînement : filtrer df[target_X_hY.notna()] par horizon.
+
+Features totales : 188
+  (conversion_value J courant exclue — lags conservés)
+Targets totales  : 15
+Colonnes ID      : 8
+
+✅ Dataset exporté : D:\AdOptimizerAI\adoptimizer-backend\app\data\dataset_model_ready.csv
+   174 lignes × 212 colonnes
+   Dictionnaire features : D:\AdOptimizerAI\adoptimizer-backend\app\data\dataset_model_ready_features.txt
+
+Pipeline terminé  : 2026-05-12 15:37:37.814269
+========================================================================
