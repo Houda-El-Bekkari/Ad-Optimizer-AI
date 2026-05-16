@@ -1,4 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 
 from app.services.data_collect import run_data_collect
 from app.services.preprocessing import run_preprocessing
@@ -18,6 +20,8 @@ from app.services.case2_prediction import run_case2_prediction
 from app.services.case2_comparison import run_case2_comparison
 from app.services.case2_xai import run_case2_xai
 from app.services.llm import run_case2_final_response, run_dashboard_summary
+from app.services.audit_report import run_audit_report
+from app.services.audit_report_pdf import run_audit_report_pdf
 
 class LLMRequest(BaseModel):
     question: str
@@ -26,6 +30,17 @@ class LLMRequest(BaseModel):
 app = FastAPI(
     title="AdOptimizer AI Backend",
     version="1.0.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:4200",
+        "http://127.0.0.1:4200",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 class Case2StrategyRequest(BaseModel):
@@ -104,6 +119,25 @@ def agent(req: LLMRequest):
 @app.post("/dashboard-summary")
 def dashboard_summary(payload: dict):
     return run_dashboard_summary(payload)
+
+
+@app.post("/audit-report")
+def audit_report():
+    return run_audit_report()
+
+
+@app.get("/audit-report/pdf")
+def audit_report_pdf():
+    result = run_audit_report_pdf()
+
+    if result.get("status") != "success":
+        raise HTTPException(status_code=500, detail=result.get("message", "PDF indisponible"))
+
+    return FileResponse(
+        path=result["output_file"],
+        media_type="application/pdf",
+        filename="adoptimizer_audit_report.pdf",
+    )
 
 
 # =========================

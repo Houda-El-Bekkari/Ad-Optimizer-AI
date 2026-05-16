@@ -1,36 +1,52 @@
 <main class="page-content">
-    <header class="topbar">
-      <div>
-        <p class="eyebrow">Premium Ads Analytics</p>
-        <h1>Campaign Overview</h1>
-      </div>
-      <div class="topbar-actions">
-        <span class="sync-pill">Last audit: 2 min ago</span>
-        <span class="avatar">HA</span>
-      </div>
-    </header>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">Premium Ads Analytics</p>
+      <h1>Campaign Overview</h1>
+    </div>
+    <div class="topbar-actions">
+      <span class="sync-pill">{{ generatedAtLabel }}</span>
+      <span class="avatar">HA</span>
+    </div>
+  </header>
 
+  @if (loading) {
+    <article class="analytics-card state-card">
+      <p class="eyebrow">Synchronisation</p>
+      <h2>Chargement de la vue globale...</h2>
+      <p>Lecture des derniers resultats stockes dans campaign_optimization_dashboard.</p>
+    </article>
+  } @else if (error) {
+    <article class="analytics-card state-card error-state">
+      <p class="eyebrow">Connexion donnees</p>
+      <h2>Overview indisponible</h2>
+      <p>{{ error }}</p>
+      <button type="button" (click)="loadOverview()">Reessayer</button>
+    </article>
+  } @else {
     <section class="kpi-grid" aria-label="Indicateurs publicitaires">
       <article class="kpi-card">
         <span>ROAS global</span>
-        <strong>3.2x</strong>
-        <small class="down">-0.4 vs semaine passee</small>
-        <em class="ai-note note-down">watch this</em>
+        <strong>{{ displayRoas(globalRoas) }}</strong>
+        <small [class.up]="(predictedRoas || 0) >= (globalRoas || 0)" [class.down]="(predictedRoas || 0) < (globalRoas || 0)">
+          Projection J+14: {{ displayRoas(predictedRoas) }}
+        </small>
+        <em class="ai-note note-down">monitor</em>
       </article>
       <article class="kpi-card">
         <span>CPA moyen</span>
-        <strong>45 MAD</strong>
-        <small class="up">Objectif: 50 MAD</small>
+        <strong>{{ displayMoney(averageCpa) }}</strong>
+        <small>Spend total: {{ displayMoney(totalSpend) }}</small>
       </article>
       <article class="kpi-card">
         <span>Conversions</span>
-        <strong>847</strong>
-        <small class="up">+12% vs J-7</small>
+        <strong>{{ displayNumber(totalConversions) }}</strong>
+        <small>Total multi-canal</small>
       </article>
       <article class="kpi-card">
         <span>Alertes IA</span>
-        <strong>2</strong>
-        <small>1 action prioritaire</small>
+        <strong>{{ aiAlerts }}</strong>
+        <small>{{ criticalCampaigns }} campagne(s) critiques</small>
       </article>
     </section>
 
@@ -40,34 +56,25 @@
           <div class="card-header">
             <div>
               <p class="eyebrow">Performance trend</p>
-              <h2>ROAS et CPA sur 14 jours</h2>
+              <h2>ROAS projete vers J+14</h2>
             </div>
-            <span class="chip">Meta + Google</span>
+            <span class="chip">{{ platformsLabel }}</span>
           </div>
 
           <div class="chart-area" aria-label="Graphique performance">
             <div class="bars" aria-hidden="true">
-              <span style="height: 46%"></span>
-              <span style="height: 58%"></span>
-              <span style="height: 52%"></span>
-              <span style="height: 66%"></span>
-              <span style="height: 73%"></span>
-              <span style="height: 62%"></span>
-              <span style="height: 48%"></span>
-              <span style="height: 42%"></span>
-              <span style="height: 54%"></span>
-              <span style="height: 61%"></span>
-              <span style="height: 70%"></span>
-              <span style="height: 76%"></span>
+              @for (bar of performanceBars; track $index) {
+                <span [style.height.%]="bar"></span>
+              }
             </div>
             <div class="trend-line" aria-hidden="true"></div>
-            <em class="annotation chart-note">seasonality impact</em>
+            <em class="annotation chart-note">projection ML</em>
           </div>
 
           <div class="legend">
-            <span><i class="roas"></i> ROAS</span>
-            <span><i class="cpa"></i> CPA pressure</span>
-            <span><i class="alert"></i> Fatigue signal</span>
+            <span><i class="roas"></i> ROAS actuel {{ displayRoas(globalRoas) }}</span>
+            <span><i class="cpa"></i> CPA moyen {{ displayMoney(averageCpa) }}</span>
+            <span><i class="alert"></i> {{ aiAlerts }} alerte(s)</span>
           </div>
         </article>
 
@@ -77,34 +84,28 @@
               <p class="eyebrow">Campaign Optimization</p>
               <h2>Anomalies detectees</h2>
             </div>
-            <span class="chip danger">Priority high</span>
+            <span class="chip danger">{{ aiAlerts }} alertes</span>
           </div>
 
           <div class="anomaly-list">
-            <div class="anomaly-row critical">
-              <span class="severity"></span>
-              <div>
-                <strong>CTR Meta Retargeting : 0.8% vers 0.3%</strong>
-                <p>Chute de 62% en 48h. Isolation Forest score : 0.87.</p>
+            @for (anomaly of topAnomalies; track anomaly.title + anomaly.meta) {
+              <div class="anomaly-row" [class.critical]="anomaly.level.toLowerCase().includes('critical')">
+                <span class="severity"></span>
+                <div>
+                  <strong>{{ anomaly.title }}</strong>
+                  <p>{{ anomaly.meta }}</p>
+                </div>
+                <em>{{ anomaly.level }}</em>
               </div>
-              <em>CTR dropping</em>
-            </div>
-
-            <div class="anomaly-row">
-              <span class="severity"></span>
-              <div>
-                <strong>CPA : 45 MAD vers 89 MAD</strong>
-                <p>Hausse de 98%, tendance confirmee par Prophet.</p>
+            } @empty {
+              <div class="anomaly-row">
+                <span class="severity"></span>
+                <div>
+                  <strong>Aucune anomalie prioritaire</strong>
+                  <p>Le dernier audit ne remonte pas de signal critique.</p>
+                </div>
               </div>
-            </div>
-
-            <div class="anomaly-row">
-              <span class="severity"></span>
-              <div>
-                <strong>Impressions -35%</strong>
-                <p>Signal de fatigue publicitaire, frequence moyenne 7.2x.</p>
-              </div>
-            </div>
+            }
           </div>
         </article>
 
@@ -123,24 +124,16 @@
               <span>Score</span>
               <span>Status</span>
             </div>
-            <div class="table-row">
-              <span>Retargeting ete 2025</span>
-              <span>Meta Ads</span>
-              <span>23</span>
-              <strong class="status critical">Critical</strong>
-            </div>
-            <div class="table-row">
-              <span>Search brand</span>
-              <span>Google Ads</span>
-              <span>84</span>
-              <strong class="status healthy">Healthy</strong>
-            </div>
-            <div class="table-row">
-              <span>Ecommerce ete</span>
-              <span>Meta Ads</span>
-              <span>52</span>
-              <strong class="status warning">Warning</strong>
-            </div>
+            @for (record of records; track record.campaign_id + record.platform) {
+              <div class="table-row">
+                <span>{{ record.campaign_id }}</span>
+                <span>{{ platformLabel(record.platform) }}</span>
+                <span>{{ displayNumber(record.health_score) }}</span>
+                <strong class="status" [class.critical]="(record.health_status || '').toLowerCase().includes('critical')" [class.warning]="(record.health_status || '').toLowerCase().includes('warning')" [class.healthy]="(record.health_status || '').toLowerCase().includes('healthy')">
+                  {{ record.health_status || "UNKNOWN" }}
+                </strong>
+              </div>
+            }
           </div>
         </article>
       </section>
@@ -149,26 +142,23 @@
         <article class="analytics-card health-card">
           <p class="eyebrow">Campaign Health</p>
           <div class="score-wrap">
-            <div class="score-ring">23</div>
+            <div class="score-ring">{{ displayNumber(averageHealthScore) }}</div>
             <div>
-              <h2>Critical</h2>
-              <p>Action requise sur Meta Retargeting.</p>
+              <h2>{{ criticalCampaigns ? "Critical" : "Monitoring" }}</h2>
+              <p>{{ records.length }} canal(aux) surveilles pour {{ campaignGroupLabel }}.</p>
             </div>
           </div>
-          <em class="annotation health-note">creative fatigue</em>
+          <em class="annotation health-note">{{ platformsLabel }}</em>
         </article>
 
         <article class="analytics-card causal-card">
           <p class="eyebrow">Root Cause Analysis</p>
           <h2>Cause principale</h2>
-          <p>
-            L'audience cible a ete exposee en moyenne 7.2x aux memes creatifs
-            sur 14 jours, entrainant baisse CTR et hausse CPA.
-          </p>
+          <p>{{ rootCauseLabel }}</p>
           <div class="causal-tags">
-            <span>Frequency 7.2x</span>
-            <span>Audience saturated</span>
-            <span>CTR -62%</span>
+            <span>Confiance {{ displayPercent((primary?.causal_confidence || 0) * 100) }}</span>
+            <span>{{ primary?.root_cause || "root cause" }}</span>
+            <span>{{ primary?.health_status || "status" }}</span>
           </div>
         </article>
 
@@ -176,29 +166,30 @@
           <div class="card-header compact">
             <div>
               <p class="eyebrow">AI Recommended Action</p>
-              <h2>Action prioritaire</h2>
+              <h2>{{ actionTitle }}</h2>
             </div>
-            <span class="chip success">RL optimized</span>
+            <span class="chip success">AI synced</span>
           </div>
-          <p>
-            Renouveler les creatifs, limiter la frequence et reallouer 40%
-            du budget vers Google Search.
-          </p>
+          <p>{{ primary?.dashboard_summary || businessAdvice }}</p>
+          <div class="business-advice">
+            <span>Conseil business</span>
+            <strong>{{ businessAdvice }}</strong>
+          </div>
           <div class="impact-grid">
-            <span><b>ROAS</b> 3.6x</span>
-            <span><b>CPA</b> 42 MAD</span>
+            <span><b>ROAS prevu</b> {{ displayRoas(primaryExpectedImpact["expected_roas"]) }}</span>
+            <span><b>Conv. prevues</b> {{ displayNumber(primaryExpectedImpact["expected_conversions"]) }}</span>
           </div>
-          <button type="button">Appliquer la recommandation</button>
+          <button type="button" routerLink="/optimization">Voir l'optimisation</button>
         </article>
 
         <article class="analytics-card xai-card">
           <p class="eyebrow">Decision Insights</p>
-          <h2>Pourquoi cette decision ?</h2>
+          <h2>Signaux decisionnels</h2>
           <div class="xai-bars">
-            <div><span>Frequence exposition</span><i style="width: 88%"></i><b>88%</b></div>
-            <div><span>CTR 7 jours</span><i style="width: 74%"></i><b>74%</b></div>
-            <div><span>CPA moyen</span><i style="width: 61%"></i><b>61%</b></div>
-            <div><span>Budget utilise</span><i style="width: 43%"></i><b>43%</b></div>
+            <div><span>Health risk</span><i [style.width.%]="100 - (primary?.health_score || 0)"></i><b>{{ displayPercent(100 - (primary?.health_score || 0)) }}</b></div>
+            <div><span>Anomaly score</span><i [style.width.%]="(primary?.anomaly_score || 0) * 100"></i><b>{{ displayPercent((primary?.anomaly_score || 0) * 100) }}</b></div>
+            <div><span>Causal confidence</span><i [style.width.%]="(primary?.causal_confidence || 0) * 100"></i><b>{{ displayPercent((primary?.causal_confidence || 0) * 100) }}</b></div>
+            <div><span>Budget observe</span><i [style.width.%]="budgetSignalWidth"></i><b>{{ displayMoney(totalSpend) }}</b></div>
           </div>
         </article>
 
@@ -210,4 +201,5 @@
         </article>
       </aside>
     </section>
+  }
 </main>

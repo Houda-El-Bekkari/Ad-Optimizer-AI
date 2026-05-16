@@ -1,4 +1,4 @@
-Pipeline démarré  : 2026-05-13 12:42:31.395148
+Pipeline démarré  : 2026-05-15 19:05:59.168469
 Input             : D:\AdOptimizerAI\adoptimizer-backend\app\data\raw_ads_dataset_strict.csv
 Output            : D:\AdOptimizerAI\adoptimizer-backend\app\data\dataset_model_ready.csv
 
@@ -181,5 +181,5 @@ Colonnes ID      : 8
    174 lignes × 212 colonnes
    Dictionnaire features : D:\AdOptimizerAI\adoptimizer-backend\app\data\dataset_model_ready_features.txt
 
-Pipeline terminé  : 2026-05-13 12:42:32.603708
+Pipeline terminé  : 2026-05-15 19:06:00.182786
 ========================================================================

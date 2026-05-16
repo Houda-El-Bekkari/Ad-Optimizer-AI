@@ -225,7 +225,7 @@ h1 {
 
 .bars {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(14, 1fr);
   align-items: end;
   gap: 9px;
   height: 100%;
@@ -469,6 +469,28 @@ h1 {
   margin-top: 14px;
 }
 
+.business-advice {
+  display: grid;
+  gap: 5px;
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid rgba(29, 158, 117, 0.18);
+  border-radius: 12px;
+  background: rgba(29, 158, 117, 0.08);
+}
+
+.business-advice span {
+  color: #1d9e75;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.business-advice strong {
+  color: #10231d;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 .impact-grid span {
   padding: 12px;
   border-radius: 12px;
@@ -533,6 +555,14 @@ button {
   background: #10231d;
   color: #ffffff;
   text-decoration: none;
+}
+
+.state-card {
+  max-width: 760px;
+}
+
+.error-state {
+  border-color: rgba(175, 64, 64, 0.22);
 }
 
 @keyframes growBar {

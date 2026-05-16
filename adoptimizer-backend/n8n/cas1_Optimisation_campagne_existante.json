@@ -728,6 +728,36 @@
           "name": "Postgres account 2"
         }
       }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { run_audit_report: true } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2992,
+        336
+      ],
+      "id": "b4fc7861-313f-4e0f-b5dd-2f07b40f2e3c",
+      "name": "Run Audit Report Once"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/audit-report",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        3232,
+        336
+      ],
+      "id": "6c2d5a30-fba9-4590-8a20-898cfe6b8b1f",
+      "name": "Generate Audit Report"
     }
   ],
   "pinData": {},
@@ -890,6 +920,28 @@
         [
           {
             "node": "Insert campaign optimization dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert campaign optimization dashboard": {
+      "main": [
+        [
+          {
+            "node": "Run Audit Report Once",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Audit Report Once": {
+      "main": [
+        [
+          {
+            "node": "Generate Audit Report",
             "type": "main",
             "index": 0
           }
