@@ -1,0 +1,11 @@
+{
+  "description": "Fichier de tendances marketing — mise à jour manuelle ou via script",
+  "updated_at": "2026-05-14T22:12:15.925801",
+  "version": "1.0",
+  "trends": [
+    "Google Ads 2024-2025 : Performance Max (PMax) est la campagne prioritaire. Smart Bidding (tROAS, tCPA) recommandé sur les enchères manuelles. Broad Match + Smart Bidding = stratégie officielle Google.",
+    "Meta Ads 2024-2025 : Advantage+ Shopping Campaigns (ASC) pour l'e-commerce. Advantage+ Audience remplace progressivement les audiences manuelles détaillées. Conversions API (CAPI) obligatoire pour tracking fiable post-iOS 17.",
+    "Tendances générales 2024-2025 : IA générative dans les annonces (RSA auto, titres dynamiques). First-party data critique face à la disparition des cookies tiers. Attribution data-driven recommandée sur tous les comptes Google."
+  ],
+  "instructions": "Pour mettre à jour : modifier ce fichier JSON directement ou brancher un script/API qui réécrit ce fichier. Le moteur TrendsEngine recharge automatiquement (TTL 60min)."
+}

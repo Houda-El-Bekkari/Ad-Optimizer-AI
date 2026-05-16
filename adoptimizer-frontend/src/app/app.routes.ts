@@ -9,10 +9,11 @@ import { Campaigns } from './pages/campaigns/campaigns';
 import { ConnectPlatforms } from './pages/connect-platforms/connect-platforms';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { DecisionInsights } from './pages/decision-insights/decision-insights';
-import { Login } from './pages/login/login';
 import { Optimization } from './pages/optimization/optimization';
 import { Reports } from './pages/reports/reports';
 import { Settings } from './pages/settings/settings';
+import { Signup } from './pages/signup/signup';
+import { Login } from './pages/login/login';
 
 export const routes: Routes = [
   {
@@ -22,10 +23,16 @@ export const routes: Routes = [
     title: 'Accueil - AdOptimizer AI',
   },
   {
+  path: 'signup',
+  component: Signup,
+  title: 'Signup - AdOptimizer AI',
+},
+  {
     path: 'login',
     component: Login,
     title: 'Connexion - AdOptimizer AI',
   },
+  
   {
     path: 'connect-platforms',
     component: ConnectPlatforms,

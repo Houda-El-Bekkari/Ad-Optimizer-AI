@@ -1,6 +1,6 @@
-Pipeline démarré  : 2026-05-15 19:05:59.168469
-Input             : D:\AdOptimizerAI\adoptimizer-backend\app\data\raw_ads_dataset_strict.csv
-Output            : D:\AdOptimizerAI\adoptimizer-backend\app\data\dataset_model_ready.csv
+Pipeline démarré  : 2026-05-15 10:55:46.411329
+Input             : C:\Users\pc\Desktop\Ad-Optimizer-AI\adoptimizer-backend\app\data\raw_ads_dataset_strict.csv
+Output            : C:\Users\pc\Desktop\Ad-Optimizer-AI\adoptimizer-backend\app\data\dataset_model_ready.csv
 
 ========================================================================
 PHASE 0 — CHARGEMENT & AUDIT QUALITÉ INITIAL
@@ -177,9 +177,9 @@ Features totales : 188
 Targets totales  : 15
 Colonnes ID      : 8
 
-✅ Dataset exporté : D:\AdOptimizerAI\adoptimizer-backend\app\data\dataset_model_ready.csv
+✅ Dataset exporté : C:\Users\pc\Desktop\Ad-Optimizer-AI\adoptimizer-backend\app\data\dataset_model_ready.csv
    174 lignes × 212 colonnes
-   Dictionnaire features : D:\AdOptimizerAI\adoptimizer-backend\app\data\dataset_model_ready_features.txt
+   Dictionnaire features : C:\Users\pc\Desktop\Ad-Optimizer-AI\adoptimizer-backend\app\data\dataset_model_ready_features.txt
 
-Pipeline terminé  : 2026-05-15 19:06:00.182786
+Pipeline terminé  : 2026-05-15 10:55:49.336863
 ========================================================================

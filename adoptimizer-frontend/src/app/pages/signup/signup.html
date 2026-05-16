@@ -1,0 +1,162 @@
+<div class="auth-page">
+
+  <div class="visual-panel">
+
+    <a class="back-link" routerLink="/">← Retour à l'accueil</a>
+
+    <div class="visual-content">
+
+      <div class="brand">
+        <div class="brand-mark">AO</div>
+        <div>
+          <strong>AdOptimizer AI</strong>
+          <small>Intelligent Ads Platform</small>
+        </div>
+      </div>
+
+      <div class="hero-copy">
+        <p class="eyebrow">Nouveau compte · Gratuit</p>
+        <h1>Rejoignez la plateforme d'intelligence publicitaire.</h1>
+        <p>
+          Connectez vos campagnes, detectez les anomalies
+          et recevez des recommandations expliquees par l'IA.
+        </p>
+      </div>
+
+      <div class="intelligence-card">
+        <div class="card-top">
+          <span>AdOptimizer Command Center</span>
+          <strong>Live</strong>
+        </div>
+        <div class="audit-grid">
+          <article>
+            <span>Health Score</span>
+            <strong>72</strong>
+          </article>
+          <article>
+            <span>ROAS Moyen</span>
+            <strong>3.2×</strong>
+          </article>
+          <article>
+            <span>Anomalies</span>
+            <strong>4</strong>
+          </article>
+        </div>
+        <div class="activity-feed">
+          <p><b>Agent 3</b> — Anomalie detectee sur Meta Retargeting</p>
+          <p><b>Agent 2</b> — Cause racine : saturation creative avancee</p>
+          <p><b>Agent 1</b> — Recommandation : reallouer 40% vers Google Search</p>
+        </div>
+      </div>
+
+      <div class="value-list">
+        <span>Google Ads</span>
+        <span>Meta Ads</span>
+        <span>XAI</span>
+        <span>Causal AI</span>
+        <span>RL Optimizer</span>
+        <span>LLM Insights</span>
+      </div>
+
+    </div>
+
+    <div></div>
+
+  </div>
+
+  <div class="form-panel">
+    <div class="auth-card">
+
+      <div class="form-heading">
+        <p class="eyebrow">Etape 1 sur 3 — Compte</p>
+        <h2>Creer votre compte</h2>
+        <p>Rejoignez AdOptimizer AI et optimisez vos campagnes avec l'IA.</p>
+      </div>
+
+      <form (ngSubmit)="signup()">
+
+        <label>
+          <span>Nom d'utilisateur</span>
+          <input
+            type="text"
+            [(ngModel)]="username"
+            name="username"
+            placeholder="ex: jean_dupont"
+            required
+          />
+        </label>
+
+        <label>
+          <span>Email professionnel</span>
+          <input
+            type="email"
+            [(ngModel)]="email"
+            name="email"
+            placeholder="you@company.com"
+            required
+          />
+        </label>
+
+        <label>
+          <span>Mot de passe</span>
+          <input
+            [type]="showPw ? 'text' : 'password'"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Min. 6 caractères"
+            required
+          />
+        </label>
+
+        <label>
+          <span>Confirmer le mot de passe</span>
+          <input
+            [type]="showPw ? 'text' : 'password'"
+            [(ngModel)]="confirmPassword"
+            name="confirmPassword"
+            placeholder="Repetez votre mot de passe"
+            required
+          />
+        </label>
+
+        <div class="form-options">
+          <label class="remember">
+            <input type="checkbox" [(ngModel)]="showPw" name="showPw" />
+            Afficher les mots de passe
+          </label>
+        </div>
+
+        <button class="primary-action" type="submit" [disabled]="loading">
+          {{ loading ? 'Creation en cours...' : 'Creer un compte' }}
+        </button>
+
+      </form>
+
+      <div class="onboarding-flow">
+        <div class="step active">
+          <span>1</span>
+          <p>Compte</p>
+        </div>
+        <div class="step">
+          <span>2</span>
+          <p>Plateformes</p>
+        </div>
+        <div class="step">
+          <span>3</span>
+          <p>Audit IA</p>
+        </div>
+      </div>
+
+      <div class="trust-box">
+        <strong>Deja un compte ?</strong>
+        <p>
+          Connectez-vous sur
+          <a routerLink="/login">la page de connexion</a>
+          pour acceder a votre dashboard.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+</div>
