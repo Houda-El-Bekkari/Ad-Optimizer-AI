@@ -14,7 +14,7 @@ import { NgIf } from '@angular/common';
 
 @Component({
 
-  selector: 'app-login',
+  selector: 'app-signup',
 
   imports: [
     RouterLink,
@@ -22,20 +22,20 @@ import { NgIf } from '@angular/common';
     NgIf
   ],
 
-  templateUrl: './login.html',
+  templateUrl: './signup.html',
 
-  styleUrl: './login.scss',
+  styleUrl: './signup.scss',
 })
 
-export class Login {
+export class Signup {
+
+  username = '';
 
   email = '';
 
   password = '';
 
-  emailFocused = false;
-
-  pwFocused = false;
+  confirmPassword = '';
 
   showPw = false;
 
@@ -53,47 +53,43 @@ export class Login {
 
 
 
-  login() {
+  signup() {
 
     const payload = {
 
+      username: this.username,
+
       email: this.email,
 
-      password: this.password
+      password: this.password,
+
+      role: 'marketing_user'
     };
 
 
 
     this.http.post(
 
-      'http://127.0.0.1:8000/login',
+      'http://127.0.0.1:8000/signup',
 
       payload
 
     ).subscribe({
 
-next: (response: any) => {
+      next: (response: any) => {
 
-  if (!response.success) {
+        console.log(response);
 
-    alert(response.message);
 
-    return;
-  }
 
-  console.log(response);
+        alert('Account created successfully');
 
-  localStorage.setItem(
 
-    'user',
 
-    JSON.stringify(response)
-  );
-
-  this.router.navigate([
-    '/connect-platforms'
-  ]);
-},
+        this.router.navigate([
+          '/login'
+        ]);
+      },
 
 
 
@@ -101,7 +97,7 @@ next: (response: any) => {
 
         console.error(error);
 
-        alert('Login failed');
+        alert('Signup failed');
       }
     });
   }

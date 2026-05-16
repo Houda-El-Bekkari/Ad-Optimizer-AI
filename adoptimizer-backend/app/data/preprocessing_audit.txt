@@ -1,6 +1,6 @@
-Pipeline démarré  : 2026-05-12 15:37:35.733583
-Input             : D:\AdOptimizerAI\adoptimizer-backend\app\data\raw_ads_dataset_strict.csv
-Output            : D:\AdOptimizerAI\adoptimizer-backend\app\data\dataset_model_ready.csv
+Pipeline démarré  : 2026-05-15 10:55:46.411329
+Input             : C:\Users\pc\Desktop\Ad-Optimizer-AI\adoptimizer-backend\app\data\raw_ads_dataset_strict.csv
+Output            : C:\Users\pc\Desktop\Ad-Optimizer-AI\adoptimizer-backend\app\data\dataset_model_ready.csv
 
 ========================================================================
 PHASE 0 — CHARGEMENT & AUDIT QUALITÉ INITIAL
@@ -32,22 +32,22 @@ Colonnes NA_platform  :
 
 NaN réels par colonne :
   spend                  : 2 (1.09%)
-  impressions            : 3 (1.64%)
-  clicks                 : 2 (1.09%)
+  impressions            : 2 (1.09%)
+  clicks                 : 4 (2.19%)
   conversions            : 3 (1.64%)
-  conversion_value       : 2 (1.09%)
-  CTR                    : 5 (2.73%)
+  conversion_value       : 3 (1.64%)
+  CTR                    : 2 (1.09%)
   CPC                    : 1 (0.55%)
-  CPM                    : 2 (1.09%)
-  reach                  : 3 (1.64%)
-  frequency              : 1 (0.55%)
+  CPM                    : 5 (2.73%)
+  reach                  : 2 (1.09%)
   link_clicks            : 2 (1.09%)
-  likes                  : 1 (0.55%)
-  shares                 : 1 (0.55%)
+  likes                  : 2 (1.09%)
+  comments               : 4 (2.19%)
+  shares                 : 2 (1.09%)
   post_engagement        : 1 (0.55%)
-  video_views            : 2 (1.09%)
-  add_to_cart            : 1 (0.55%)
-  purchases              : 2 (1.09%)
+  video_views            : 1 (0.55%)
+  add_to_cart            : 3 (1.64%)
+  purchases              : 5 (2.73%)
 
 ========================================================================
 PHASE 1 — DÉDUPLICATION
@@ -84,24 +84,24 @@ PHASE 3 — CORRECTIONS DE TYPE
 PHASE 4 — IMPUTATION NaN RÉELS
 ========================================================================
   spend                  : 2 NaN → 2 imputés
-  impressions            : 3 NaN → 3 imputés
-  clicks                 : 2 NaN → 2 imputés
+  impressions            : 2 NaN → 2 imputés
+  clicks                 : 4 NaN → 4 imputés
   conversions            : 3 NaN → 3 imputés
-  conversion_value       : 2 NaN → 2 imputés
-  CTR                    : 5 NaN → 5 imputés
+  conversion_value       : 3 NaN → 3 imputés
+  CTR                    : 2 NaN → 2 imputés
   CPC                    : 1 NaN → 1 imputés
-  CPM                    : 2 NaN → 2 imputés
-  reach                  : 3 NaN → 3 imputés
-  frequency              : 1 NaN → 1 imputés
+  CPM                    : 5 NaN → 5 imputés
+  reach                  : 2 NaN → 2 imputés
   link_clicks            : 2 NaN → 2 imputés
-  likes                  : 1 NaN → 1 imputés
-  shares                 : 1 NaN → 1 imputés
+  likes                  : 2 NaN → 2 imputés
+  comments               : 4 NaN → 4 imputés
+  shares                 : 2 NaN → 2 imputés
   post_engagement        : 1 NaN → 1 imputés
-  video_views            : 2 NaN → 2 imputés
-  add_to_cart            : 1 NaN → 1 imputés
-  purchases              : 2 NaN → 2 imputés
+  video_views            : 1 NaN → 1 imputés
+  add_to_cart            : 3 NaN → 3 imputés
+  purchases              : 4 NaN → 4 imputés
 
-Total NaN imputés     : 34
+Total NaN imputés     : 43
 
 ========================================================================
 PHASE 5 — VARIABLES BUSINESS CALCULÉES
@@ -110,9 +110,9 @@ PHASE 5 — VARIABLES BUSINESS CALCULÉES
                      cpm_calc, budget_utilization, revenue_per_click,
                      ctr_delta
 
-  ROAS médian (global)       : 3.936
-  CPA médian (global)        : 21.68
-  Conv_rate médian (global)  : 0.0395
+  ROAS médian (global)       : 3.935
+  CPA médian (global)        : 21.89
+  Conv_rate médian (global)  : 0.0398
 
 ========================================================================
 PHASE 6 — FEATURE ENGINEERING TEMPOREL
@@ -177,9 +177,9 @@ Features totales : 188
 Targets totales  : 15
 Colonnes ID      : 8
 
-✅ Dataset exporté : D:\AdOptimizerAI\adoptimizer-backend\app\data\dataset_model_ready.csv
+✅ Dataset exporté : C:\Users\pc\Desktop\Ad-Optimizer-AI\adoptimizer-backend\app\data\dataset_model_ready.csv
    174 lignes × 212 colonnes
-   Dictionnaire features : D:\AdOptimizerAI\adoptimizer-backend\app\data\dataset_model_ready_features.txt
+   Dictionnaire features : C:\Users\pc\Desktop\Ad-Optimizer-AI\adoptimizer-backend\app\data\dataset_model_ready_features.txt
 
-Pipeline terminé  : 2026-05-12 15:37:37.814269
+Pipeline terminé  : 2026-05-15 10:55:49.336863
 ========================================================================
