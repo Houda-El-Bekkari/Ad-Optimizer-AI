@@ -1,0 +1,362 @@
+.reports-page {
+  gap: 20px;
+}
+
+.report-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.export-pdf-button {
+  position: relative;
+  gap: 9px;
+  overflow: hidden;
+  min-height: 42px;
+  height: 42px;
+  padding: 5px 6px 5px 7px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.30), transparent 34%),
+    linear-gradient(135deg, #23cda1 0%, #13a77f 48%, #0a755f 100%);
+  box-shadow:
+    0 16px 32px rgba(19, 167, 127, 0.30),
+    inset 0 2px 0 rgba(255, 255, 255, 0.30),
+    inset 0 -5px 0 rgba(5, 75, 62, 0.20);
+  color: #ffffff;
+  transform: translateY(0);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    filter 180ms ease;
+}
+
+.export-pdf-button::after {
+  content: "";
+  position: absolute;
+  inset: -40% auto -40% -30%;
+  width: 35%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.34), transparent);
+  transform: skewX(-18deg);
+  transition: left 420ms ease;
+}
+
+.export-pdf-button:hover:not(:disabled) {
+  filter: saturate(1.08);
+  transform: translateY(-2px);
+  box-shadow:
+    0 22px 42px rgba(19, 167, 127, 0.34),
+    inset 0 2px 0 rgba(255, 255, 255, 0.34),
+    inset 0 -5px 0 rgba(5, 75, 62, 0.22);
+}
+
+.export-pdf-button:hover:not(:disabled)::after {
+  left: 112%;
+}
+
+.export-pdf-button:hover:not(:disabled) .download-icon {
+  transform: translateY(3px);
+}
+
+.pdf-file {
+  position: relative;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow:
+    0 8px 18px rgba(5, 75, 62, 0.18),
+    inset 0 -4px 0 rgba(19, 167, 127, 0.12);
+  color: #0b876a;
+  flex: 0 0 auto;
+}
+
+.pdf-file::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-bottom-left-radius: 5px;
+  background:
+    linear-gradient(135deg, rgba(19, 167, 127, 0.10) 0 48%, transparent 49%),
+    #dff8f1;
+  box-shadow: -1px 1px 0 rgba(11, 135, 106, 0.10);
+}
+
+.pdf-symbol {
+  align-self: end;
+  margin-bottom: 5px;
+  font-size: 9px;
+  font-weight: 1000;
+  letter-spacing: 0;
+}
+
+.export-divider {
+  width: 1px;
+  height: 26px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.42);
+  box-shadow: 1px 0 0 rgba(5, 75, 62, 0.12);
+}
+
+.export-text {
+  min-width: 84px;
+  font-size: 13px;
+  font-weight: 1000;
+  letter-spacing: 0;
+  text-shadow: 0 1px 8px rgba(5, 75, 62, 0.24);
+}
+
+.download-badge {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow:
+    inset 0 -3px 0 rgba(19, 167, 127, 0.10),
+    0 6px 14px rgba(5, 75, 62, 0.18);
+  flex: 0 0 auto;
+}
+
+.download-icon {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: #0b876a;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 180ms ease;
+}
+
+.report-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.36fr);
+  gap: 16px;
+}
+
+.executive-card {
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(29, 158, 117, 0.14), rgba(30, 183, 199, 0.08)),
+    #ffffff;
+}
+
+.executive-card h2 {
+  max-width: 880px;
+  font-size: 28px;
+}
+
+.finding-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+
+.finding-list span {
+  padding: 9px 11px;
+  border: 1px solid rgba(29, 158, 117, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: #31525a;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.report-file-card {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+
+.audit-campaign-list {
+  display: grid;
+  gap: 14px;
+}
+
+.audit-campaign-card {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid #dfe8ed;
+  border-radius: 16px;
+  background: #f8fbfc;
+}
+
+.campaign-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.campaign-heading span {
+  display: block;
+  margin-bottom: 4px;
+  color: #1d9e75;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.campaign-heading strong {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  border-radius: 50%;
+  background: conic-gradient(#1d9e75 0 44%, #e1ecef 44% 100%);
+  color: #10231d;
+  font-size: 20px;
+}
+
+.campaign-kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.campaign-kpis span {
+  padding: 12px;
+  border: 1px solid #dfe8ed;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #63737b;
+  font-size: 12px;
+}
+
+.campaign-kpis b {
+  display: block;
+  margin-bottom: 4px;
+  color: #10231d;
+  font-size: 20px;
+}
+
+.business-advice {
+  display: grid;
+  gap: 5px;
+  padding: 12px;
+  border: 1px solid rgba(29, 158, 117, 0.18);
+  border-radius: 12px;
+  background: rgba(29, 158, 117, 0.08);
+}
+
+.business-advice span,
+.list-row small {
+  color: #1d9e75;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.business-advice strong,
+.list-row small {
+  line-height: 1.5;
+}
+
+.business-advice strong {
+  color: #10231d;
+  font-size: 13px;
+}
+
+.anomaly-audit-list {
+  display: grid;
+  gap: 14px;
+}
+
+.anomaly-audit-card {
+  display: grid;
+  gap: 13px;
+  padding: 16px;
+  border: 1px solid #dfe8ed;
+  border-radius: 16px;
+  background: #f8fbfc;
+}
+
+.anomaly-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.anomaly-heading span {
+  display: block;
+  margin-bottom: 4px;
+  color: #1d9e75;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.anomaly-heading strong {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #fcebeb;
+  color: #a32d2d;
+  font-size: 12px;
+}
+
+.anomaly-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.anomaly-facts span {
+  padding: 10px;
+  border: 1px solid #dfe8ed;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #63737b;
+  font-size: 12px;
+}
+
+.anomaly-facts b {
+  display: block;
+  margin-bottom: 3px;
+  color: #10231d;
+  font-size: 14px;
+}
+
+.compact-tags {
+  margin-top: 0;
+}
+
+.compact-list .list-row {
+  grid-template-columns: 1fr;
+}
+
+.state-card {
+  max-width: 760px;
+}
+
+.error-state {
+  border-color: rgba(175, 64, 64, 0.22);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+@media (max-width: 900px) {
+  .report-hero,
+  .anomaly-facts,
+  .campaign-kpis {
+    grid-template-columns: 1fr;
+  }
+
+  .report-actions {
+    justify-content: flex-start;
+  }
+}

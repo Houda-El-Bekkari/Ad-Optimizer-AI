@@ -58,13 +58,25 @@
       <div class="conversation-frame">
         <div class="frame-top">
           <span>Consultant IA</span>
-          <strong>Workflow n8n connecte</strong>
+          <div class="conversation-actions">
+            <strong>Workflow n8n connecte</strong>
+            <button type="button" (click)="clearConversation()" [disabled]="!hasSavedMessages || clearingHistory">
+              {{ clearingHistory ? "Suppression..." : "Tout supprimer" }}
+            </button>
+          </div>
         </div>
 
         <div class="conversation-thread">
           @for (message of messages; track $index) {
             <div class="bubble" [class.user]="message.role === 'user'" [class.ai]="message.role === 'ai'">
-              <span>{{ message.meta || (message.role === 'user' ? 'Vous' : 'AdOptimizer AI') }}</span>
+              <div class="bubble-heading">
+                <span>{{ message.meta || (message.role === 'user' ? 'Vous' : 'AdOptimizer AI') }}</span>
+                @if (message.id) {
+                  <button type="button" (click)="deleteMessage(message)" [disabled]="deletingMessageId === message.id">
+                    {{ deletingMessageId === message.id ? "..." : "Supprimer" }}
+                  </button>
+                }
+              </div>
               <p>{{ message.text }}</p>
             </div>
           }

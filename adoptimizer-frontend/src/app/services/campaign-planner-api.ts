@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { environment } from '../../environments/environment';
+
 export interface CampaignPlannerRequest {
   objectif: string;
   budget: number;
@@ -80,7 +82,7 @@ export interface CampaignPlannerResponse {
 @Injectable({ providedIn: 'root' })
 export class CampaignPlannerApi {
   private readonly webhookUrl =
-    'http://localhost:5678/webhook/case2-creation-nouvelle-campagne';
+    `${environment.apiUrl}/workflows/case2/campaign`;
 
   constructor(private readonly http: HttpClient) {}
 

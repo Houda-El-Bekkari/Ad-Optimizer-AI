@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { environment } from '../../environments/environment';
+
 export interface JsonItems<T> {
   items?: T[];
 }
@@ -46,9 +48,9 @@ export interface CampaignOptimizationDashboardResponse {
 })
 export class CampaignOptimizationApi {
   private readonly case1WebhookUrl =
-    'http://localhost:5678/webhook/case1-optimization-campaign-existing';
+    `${environment.apiUrl}/workflows/case1/audit`;
   private readonly dashboardWebhookUrl =
-    'http://localhost:5678/webhook/case1-optimization-dashboard';
+    `${environment.apiUrl}/workflows/case1/dashboard`;
 
   constructor(private readonly http: HttpClient) {}
 

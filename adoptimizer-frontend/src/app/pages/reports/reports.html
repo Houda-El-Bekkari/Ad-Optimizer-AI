@@ -1,32 +1,204 @@
-<main class="page">
+<main class="page reports-page">
   <header class="topbar">
     <div>
       <p class="eyebrow">Reports</p>
-      <h1>Rapports et historique</h1>
-      <p class="muted">Suivre les audits, recommandations appliquees et exports de performance.</p>
+      <h1>Rapport d'audit campagnes</h1>
+      <p class="muted">Synthese business generee depuis les resultats Cas 1 : KPIs, anomalies, causes et recommandations.</p>
     </div>
-    <span class="pill">3 reports ready</span>
+    <div class="report-actions">
+      <span class="pill">{{ generatedAtLabel }}</span>
+      <button class="primary" type="button" [disabled]="loading" (click)="loadReport()">
+        {{ loading ? "Generation..." : "Regenerer" }}
+      </button>
+      <button class="export-pdf-button" type="button" [disabled]="loading || !report" (click)="downloadPdf()">
+        <span class="pdf-file" aria-hidden="true">
+          <span class="pdf-symbol">PDF</span>
+        </span>
+        <span class="export-divider" aria-hidden="true"></span>
+        <span class="export-text">Exporter PDF</span>
+        <span class="download-badge" aria-hidden="true">
+          <svg class="download-icon" viewBox="0 0 24 24" focusable="false">
+            <path d="M12 4v10"></path>
+            <path d="M7 10l5 5 5-5"></path>
+            <path d="M5 20h14"></path>
+          </svg>
+        </span>
+      </button>
+    </div>
   </header>
 
-  <section class="split-grid">
-    <article class="card">
-      <p class="eyebrow">Recent reports</p>
-      <h2>Audits disponibles</h2>
-      <div class="list">
-        <div class="list-row"><div><strong>AI Audit - Retargeting ete</strong><p>Anomalies, cause principale, recommandation.</p></div><span class="chip success">Ready</span></div>
-        <div class="list-row"><div><strong>Campaign Planner - Mode feminine</strong><p>Strategie initiale, predictions, risques.</p></div><span class="chip success">Ready</span></div>
-        <div class="list-row"><div><strong>Weekly Campaign Health</strong><p>Resume multi-campagnes et tendances.</p></div><span class="chip">Draft</span></div>
-      </div>
+  @if (loading) {
+    <article class="card state-card">
+      <p class="eyebrow">Audit report</p>
+      <h2>Generation du rapport en cours...</h2>
+      <p>Lecture des outputs tools puis construction de <strong>audit_report.json</strong>.</p>
     </article>
+  } @else if (error) {
+    <article class="card state-card error-state">
+      <p class="eyebrow">Connexion FastAPI</p>
+      <h2>Rapport indisponible</h2>
+      <p>{{ error }}</p>
+      <button class="primary" type="button" (click)="loadReport()">Reessayer</button>
+    </article>
+  } @else if (report) {
+    <section class="report-hero">
+      <article class="hero-card executive-card">
+        <p class="eyebrow">Executive summary</p>
+        <h2>{{ executiveSummary?.headline || "Audit genere avec succes." }}</h2>
+        <div class="finding-list">
+          @for (finding of executiveSummary?.key_findings || []; track finding) {
+            <span>{{ finding }}</span>
+          }
+        </div>
+      </article>
 
-    <article class="card">
-      <p class="eyebrow">Export center</p>
-      <h2>Formats</h2>
-      <div class="action-row">
-        <button class="primary" type="button">PDF</button>
-        <button type="button">CSV</button>
-        <button type="button">JSON</button>
+      <aside class="card report-file-card">
+        <p class="eyebrow">Rapport d'audit</p>
+        <h2>Analyse prete</h2>
+        <p>Rapport structure pret pour consultation, suivi des recommandations et export futur.</p>
+        <span class="chip success">Mis a jour</span>
+      </aside>
+    </section>
+
+    <section class="metric-grid">
+      <article class="metric-card">
+        <span>Campagnes auditees</span>
+        <strong>{{ portfolioSummary?.n_campaigns || campaigns.length }}</strong>
+        <small>Google + Meta</small>
+      </article>
+      <article class="metric-card">
+        <span>Health score moyen</span>
+        <strong>{{ displayNumber(portfolioSummary?.average_health_score) }}</strong>
+        <small>Score sante campagne</small>
+      </article>
+      <article class="metric-card">
+        <span>Spend courant</span>
+        <strong>{{ displayMoney(portfolioSummary?.total_current_spend) }}</strong>
+        <small>Budget observe</small>
+      </article>
+      <article class="metric-card">
+        <span>Actions IA</span>
+        <strong>{{ portfolioSummary?.recommended_action_counts?.["maintain_budget"] || 0 }}</strong>
+        <small>Recommandations detectees</small>
+      </article>
+    </section>
+
+    <section class="split-grid">
+      <div class="panel-grid">
+        <article class="card">
+          <div class="card-header">
+            <div>
+              <p class="eyebrow">Campaign audit</p>
+              <h2>Campagnes auditees</h2>
+            </div>
+            <span class="chip">{{ campaigns.length }} records</span>
+          </div>
+
+          <div class="audit-campaign-list">
+            @for (campaign of campaigns; track (campaign.campaign_id || "campaign") + (campaign.platform || "platform")) {
+              <article class="audit-campaign-card">
+                <div class="campaign-heading">
+                  <div>
+                    <span>{{ platformLabel(campaign.platform) }}</span>
+                    <h3>{{ campaign.campaign_id }}</h3>
+                  </div>
+                  <strong>{{ displayNumber(campaign.health_score) }}</strong>
+                </div>
+
+                <div class="campaign-kpis">
+                  <span><b>{{ displayRoas(campaign.current_kpis?.roas) }}</b> ROAS actuel</span>
+                  <span><b>{{ displayRoas(campaign.predicted_kpis?.roas_h14) }}</b> ROAS J+14</span>
+                  <span><b>{{ displayPercent(campaign.trend?.roas_trend_pct) }}</b> tendance ROAS</span>
+                </div>
+
+                <p>{{ campaign.business_recommendation?.summary || campaign.explanations?.dashboard_summary || campaign.explanations?.xai_summary }}</p>
+                @if (campaign.business_recommendation?.advice) {
+                  <div class="business-advice">
+                    <span>Conseil business</span>
+                    <strong>{{ campaign.business_recommendation?.advice }}</strong>
+                  </div>
+                }
+
+                <div class="action-row">
+                  <span class="chip warning">{{ campaign.status || "UNKNOWN" }}</span>
+                  <span class="chip">{{ campaign.business_recommendation?.title || campaign.recommended_action?.label || campaign.recommended_action?.action }}</span>
+                  <span class="chip">Confiance {{ displayPercent((campaign.root_cause?.confidence || 0) * 100) }}</span>
+                </div>
+              </article>
+            }
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <div>
+              <p class="eyebrow">Priority actions</p>
+              <h2>Actions prioritaires</h2>
+            </div>
+          </div>
+
+          <div class="list">
+            @for (action of executiveSummary?.priority_actions || []; track (action.campaign_id || "campaign") + (action.platform || "platform")) {
+              <div class="list-row">
+                <div>
+                  <strong>{{ platformLabel(action.platform) }} - {{ action.campaign_id }}</strong>
+                  <p>{{ action.short_summary || action.advice || action.summary }}</p>
+                </div>
+                <span class="chip">{{ action.action }}</span>
+              </div>
+            }
+          </div>
+        </article>
       </div>
-    </article>
-  </section>
+
+      <aside class="panel-grid">
+        <article class="card">
+          <p class="eyebrow">Anomaly focus</p>
+          <h2>Signaux principaux</h2>
+          <div class="anomaly-audit-list">
+            @for (campaign of campaigns; track "anomaly-" + campaign.campaign_id + campaign.platform) {
+              <article class="anomaly-audit-card">
+                <div class="anomaly-heading">
+                  <div>
+                    <span>{{ platformLabel(campaign.platform) }}</span>
+                    <h3>{{ campaign.anomaly_summary?.main_signal || anomalyTitle(campaign) }}</h3>
+                  </div>
+                  <strong>{{ campaign.anomaly_summary?.level || campaign.anomalies?.level || "Audit" }}</strong>
+                </div>
+
+                <p>{{ campaign.anomaly_summary?.business_summary || anomalyTitle(campaign) }}</p>
+
+                <div class="anomaly-facts">
+                  <span><b>{{ campaign.anomaly_summary?.n_days || campaign.anomalies?.n_anomaly_days || 0 }}</b> jours anormaux total</span>
+                  <span><b>{{ campaign.anomaly_summary?.period || "--" }}</b> signaux prioritaires</span>
+                  <span><b>{{ campaign.anomaly_summary?.roas_range || "--" }}</b> ROAS observe</span>
+                  <span><b>{{ displayNumber(campaign.anomaly_summary?.max_score || campaign.anomalies?.score) }}</b> score max</span>
+                </div>
+
+                <div class="action-row compact-tags">
+                  @for (type of campaign.anomaly_summary?.types || campaign.anomalies?.types || []; track type) {
+                    <span class="chip">{{ type }}</span>
+                  }
+                </div>
+              </article>
+            }
+          </div>
+        </article>
+
+        <article class="card">
+          <p class="eyebrow">Next steps</p>
+          <h2>Plan d'action</h2>
+          <div class="list compact-list">
+            @for (step of report.next_steps || []; track step) {
+              <div class="list-row">
+                <div>
+                  <strong>{{ step }}</strong>
+                </div>
+              </div>
+            }
+          </div>
+        </article>
+      </aside>
+    </section>
+  }
 </main>

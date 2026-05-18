@@ -6,9 +6,9 @@ import { RouterLink } from '@angular/router';
 
 import { FormsModule } from '@angular/forms';
 
-import { HttpClient } from '@angular/common/http';
-
 import { NgIf } from '@angular/common';
+
+import { AuthApi } from '../../services/auth-api';
 
 
 
@@ -45,7 +45,7 @@ export class Signup {
 
   constructor(
 
-    private http: HttpClient,
+    private authApi: AuthApi,
 
     private router: Router
 
@@ -68,13 +68,7 @@ export class Signup {
 
 
 
-    this.http.post(
-
-      'http://127.0.0.1:8000/signup',
-
-      payload
-
-    ).subscribe({
+    this.authApi.signup(payload).subscribe({
 
       next: (response: any) => {
 

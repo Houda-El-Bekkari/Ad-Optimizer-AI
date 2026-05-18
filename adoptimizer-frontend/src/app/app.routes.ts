@@ -14,6 +14,7 @@ import { Reports } from './pages/reports/reports';
 import { Settings } from './pages/settings/settings';
 import { Signup } from './pages/signup/signup';
 import { Login } from './pages/login/login';
+import { authGuard } from './auth.guard';
 
 export const routes: Routes = [
   {
@@ -36,16 +37,19 @@ export const routes: Routes = [
   {
     path: 'connect-platforms',
     component: ConnectPlatforms,
+    canActivate: [authGuard],
     title: 'Connexion plateformes - AdOptimizer AI',
   },
   {
     path: 'ai-audit',
     component: AiAudit,
+    canActivate: [authGuard],
     title: 'Audit intelligent - AdOptimizer AI',
   },
   {
     path: '',
     component: AppShell,
+    canActivate: [authGuard],
     children: [
       {
         path: 'dashboard',

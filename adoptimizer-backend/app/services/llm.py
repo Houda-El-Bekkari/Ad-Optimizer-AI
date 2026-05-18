@@ -67,7 +67,7 @@ logger = logging.getLogger(__name__)
 # ============================================================
 BASE_DIR    = Path(__file__).resolve().parent.parent   # -> app/
 DATA_DIR    = BASE_DIR / "data"
-VECTOR_DIR  = BASE_DIR / "vector_db"
+VECTOR_DIR  = BASE_DIR / "vector_store"
 OUTPUTS_DIR = BASE_DIR / "outputs"
 
 XAI_PATH = OUTPUTS_DIR / "xai_explanations.json"
@@ -177,17 +177,38 @@ def create_or_load_db(chunks: list, persist_dir: Path, name: str):
     if persist_dir.exists() and any(persist_dir.iterdir()):
         logger.info(f"  {name} : rechargee depuis disque")
         return Chroma(persist_directory=str(persist_dir), embedding_function=embedding_model)
+
+    if not chunks:
+        logger.warning(f"  {name} : aucun document RAG trouve, DB vide initialisee")
+        return Chroma(persist_directory=str(persist_dir), embedding_function=embedding_model)
+
     logger.info(f"  {name} : creation en cours...")
-    return Chroma.from_documents(chunks, embedding_model, persist_directory=str(persist_dir))
+    db = Chroma.from_documents(chunks, embedding_model, persist_directory=str(persist_dir))
+
+    if hasattr(db, "persist"):
+        db.persist()
+
+    return db
+
+
+def has_persisted_vector_store(persist_dir: Path) -> bool:
+    return persist_dir.exists() and any(persist_dir.iterdir())
 
 
 def init_vector_dbs() -> dict:
     splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=100)
     dbs = {}
     for name, doc_path in DOC_DIRS.items():
+        persist_dir = VECTOR_DIRS[name]
+
+        if has_persisted_vector_store(persist_dir):
+            dbs[name] = create_or_load_db([], persist_dir, name)
+            logger.info(f"  DB '{name}' : embeddings persistants reutilises")
+            continue
+
         docs   = load_docs(doc_path)
         chunks = splitter.split_documents(docs)
-        dbs[name] = create_or_load_db(chunks, VECTOR_DIRS[name], name)
+        dbs[name] = create_or_load_db(chunks, persist_dir, name)
         logger.info(f"  DB '{name}' : {len(chunks)} chunks")
     return dbs
 
