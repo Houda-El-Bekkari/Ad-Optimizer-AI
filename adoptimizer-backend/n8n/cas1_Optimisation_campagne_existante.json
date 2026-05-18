@@ -112,7 +112,7 @@
           "conditions": [
             {
               "id": "25c3aa15-83b9-4a7f-af68-0280634a463c",
-              "leftValue": "true",
+              "leftValue": "={{$json.has_problem_campaigns ? 'true' : 'false'}}",
               "rightValue": "true",
               "operator": {
                 "type": "string",
@@ -128,7 +128,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        1232,
+        1456,
         288
       ],
       "id": "5e62dd47-f9c5-4f0f-9773-b5c4d1ec35d9",
@@ -180,6 +180,26 @@
       ],
       "id": "89d8fd46-8947-4ff0-8911-af0623de84ab",
       "name": "Health score"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/health-monitoring-dashboard",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{JSON.stringify({ workflow_execution_id: String($execution.id ?? '') })}}",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1232,
+        160
+      ],
+      "id": "14b01665-95d6-4945-a3d4-a083b295340e",
+      "name": "Health Monitoring Dashboard"
     },
     {
       "parameters": {
@@ -758,6 +778,321 @@
       ],
       "id": "6c2d5a30-fba9-4590-8a20-898cfe6b8b1f",
       "name": "Generate Audit Report"
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows = $json.items || [];\n\nreturn rows.map(row => ({ json: row }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1456,
+        16
+      ],
+      "id": "c5f76f3e-9fa5-4c81-b12f-d7ef9b4f9017",
+      "name": "Prepare Healthy Dashboard Rows"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "name",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "campaign_optimization_dashboard",
+          "mode": "list",
+          "cachedResultName": "campaign_optimization_dashboard"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "workflow_execution_id": "={{$json.workflow_execution_id}}",
+            "global_campaign_id": "={{$json.global_campaign_id}}",
+            "campaign_id": "={{$json.campaign_id}}",
+            "platform": "={{$json.platform}}",
+            "health_score": "={{$json.health_score}}",
+            "health_status": "={{$json.health_status}}",
+            "anomaly_level": "={{$json.anomaly_level}}",
+            "anomaly_score": "={{$json.anomaly_score}}",
+            "n_anomaly_days": "={{$json.n_anomaly_days}}",
+            "current_kpis": "={{$json.current_kpis}}",
+            "predicted_kpis": "={{$json.predicted_kpis}}",
+            "trend": "={{$json.trend}}",
+            "anomaly_types": "={{$json.anomaly_types}}",
+            "top_anomalies": "={{$json.top_anomalies}}",
+            "root_cause": "={{$json.root_cause}}",
+            "root_cause_label": "={{$json.root_cause_label}}",
+            "causal_confidence": "={{$json.causal_confidence}}",
+            "recommended_action": "={{$json.recommended_action}}",
+            "action_label": "={{$json.action_label}}",
+            "priority": "={{$json.priority}}",
+            "expected_impact": "={{$json.expected_impact}}",
+            "budget_adjustment": "={{$json.budget_adjustment}}",
+            "dashboard_summary": "={{$json.dashboard_summary}}",
+            "full_json": "={{$json.full_json}}",
+            "source_generated_at": "={{$json.source_generated_at}}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "workflow_execution_id",
+              "displayName": "workflow_execution_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "global_campaign_id",
+              "displayName": "global_campaign_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "campaign_id",
+              "displayName": "campaign_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "platform",
+              "displayName": "platform",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "health_score",
+              "displayName": "health_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "health_status",
+              "displayName": "health_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "anomaly_level",
+              "displayName": "anomaly_level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "anomaly_score",
+              "displayName": "anomaly_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "n_anomaly_days",
+              "displayName": "n_anomaly_days",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "current_kpis",
+              "displayName": "current_kpis",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "predicted_kpis",
+              "displayName": "predicted_kpis",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "trend",
+              "displayName": "trend",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "anomaly_types",
+              "displayName": "anomaly_types",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "top_anomalies",
+              "displayName": "top_anomalies",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "root_cause",
+              "displayName": "root_cause",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "root_cause_label",
+              "displayName": "root_cause_label",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "causal_confidence",
+              "displayName": "causal_confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "recommended_action",
+              "displayName": "recommended_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "action_label",
+              "displayName": "action_label",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "expected_impact",
+              "displayName": "expected_impact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "budget_adjustment",
+              "displayName": "budget_adjustment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "dashboard_summary",
+              "displayName": "dashboard_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "full_json",
+              "displayName": "full_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "source_generated_at",
+              "displayName": "source_generated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1680,
+        16
+      ],
+      "id": "5e985f13-52d8-43a8-a541-fc31f439de91",
+      "name": "Insert healthy campaign dashboard",
+      "credentials": {
+        "postgres": {
+          "id": "Ja4sHGYHbbKtM2bq",
+          "name": "Postgres account 2"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -852,14 +1187,31 @@
             "type": "main",
             "index": 0
           }
-        ]
+        ],
+        []
       ]
     },
     "Health score": {
       "main": [
         [
           {
+            "node": "Health Monitoring Dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Health Monitoring Dashboard": {
+      "main": [
+        [
+          {
             "node": "If",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Prepare Healthy Dashboard Rows",
             "type": "main",
             "index": 0
           }
@@ -942,6 +1294,28 @@
         [
           {
             "node": "Generate Audit Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Healthy Dashboard Rows": {
+      "main": [
+        [
+          {
+            "node": "Insert healthy campaign dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert healthy campaign dashboard": {
+      "main": [
+        [
+          {
+            "node": "Run Audit Report Once",
             "type": "main",
             "index": 0
           }

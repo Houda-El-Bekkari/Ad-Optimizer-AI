@@ -68,6 +68,17 @@ def _is_maintain_action(action: str | None, label: str | None) -> bool:
     return "maintain" in action_text or label_text.startswith("maint")
 
 
+def _is_monitoring_action(action: str | None, label: str | None) -> bool:
+    action_text = str(action or "").lower()
+    label_text = str(label or "").lower()
+
+    return (
+        "continue_monitoring" in action_text
+        or "monitoring" in action_text
+        or "surveillance" in label_text
+    )
+
+
 def _business_action_title(
     action: str | None,
     label: str | None,
@@ -87,6 +98,9 @@ def _business_action_title(
             return "Maintenir sous surveillance"
 
         return "Maintenir le budget"
+
+    if _is_monitoring_action(action, label):
+        return "Continuer la surveillance"
 
     return label or action or "Action a confirmer"
 
@@ -114,6 +128,9 @@ def _business_advice(
             )
 
         return "Continuer la surveillance avant toute modification budgetaire."
+
+    if _is_monitoring_action(action, label):
+        return "Aucun changement budgetaire requis : continuer le monitoring et verifier les KPIs au prochain audit."
 
     if "decrease" in action_text:
         return (
@@ -159,6 +176,9 @@ def _short_business_summary(
             return "Maintenir le budget et surveiller les conversions avant toute hausse."
 
         return "Maintenir le budget et continuer la surveillance."
+
+    if _is_monitoring_action(action, label):
+        return "Aucune action corrective. Continuer la surveillance."
 
     if "decrease" in action_text:
         return "Reduire progressivement et verifier que le CPA baisse."
@@ -207,6 +227,12 @@ def _business_recommendation(
                 "Il est recommande de maintenir le budget actuel et de continuer la "
                 "surveillance des indicateurs avant toute modification."
             )
+    elif _is_monitoring_action(action, label):
+        summary = (
+            "La campagne ne presente pas d'anomalie prioritaire. Aucun changement "
+            "budgetaire n'est recommande pour le moment ; il faut continuer la "
+            "surveillance des KPIs."
+        )
     elif "decrease" in str(action or "").lower():
         summary = (
             "Il est recommande de reduire progressivement le budget, car la campagne "
@@ -428,6 +454,45 @@ def _build_campaign_section(
     health_details = health.get("details", {}) if isinstance(health.get("details"), dict) else {}
     prediction = health_details.get("prediction", {}) if isinstance(health_details.get("prediction"), dict) else {}
     trend = health_details.get("trend", {}) if isinstance(health_details.get("trend"), dict) else {}
+
+    if health and not bool(health.get("trigger_causal_ai", False)):
+        current = health.get("current_kpis", {}) if isinstance(health.get("current_kpis"), dict) else {}
+        predicted = prediction.get("predicted_kpis", {}) if isinstance(prediction.get("predicted_kpis"), dict) else {}
+        current_spend = _safe_float(current.get("spend"), default=0.0)
+        current_roas = _safe_float(current.get("roas"), default=0.0)
+        predicted_roas = _safe_float(predicted.get("roas_h14"), default=None)
+        current_conversions = _safe_float(current.get("conversions"), default=0.0)
+        predicted_conversions = _safe_float(predicted.get("conversions_h14"), default=None)
+        delta_roas_pct = None
+        if predicted_roas is not None and current_roas and abs(current_roas) > 0.0001:
+            delta_roas_pct = round(((predicted_roas - current_roas) / abs(current_roas)) * 100, 2)
+
+        optimization = {
+            "recommended_action": "continue_monitoring",
+            "action_label": "Continuer la surveillance",
+            "priority": "OK",
+            "expected_impact": {
+                "expected_roas": predicted.get("roas_h14"),
+                "expected_conversions": predicted.get("conversions_h14"),
+                "expected_spend": current.get("spend"),
+                "delta_roas_pct": delta_roas_pct,
+                "delta_conversions": (
+                    round(predicted_conversions - current_conversions, 2)
+                    if predicted_conversions is not None and current_conversions is not None
+                    else None
+                ),
+            },
+            "budget_adjustment": {
+                "adjustment_type": "monitoring",
+                "shift_pct": 0.0,
+                "shift_amount": 0.0,
+                "current_budget": current_spend,
+                "recommended_budget": current_spend,
+                "quantitative_explanation": "Aucun ajustement budgetaire requis.",
+            },
+        }
+        causal = {}
+        xai = {}
 
     causal_diag = causal.get("diagnosis", {}) if isinstance(causal.get("diagnosis"), dict) else {}
     root_cause = (

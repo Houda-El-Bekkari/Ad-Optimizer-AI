@@ -60,7 +60,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const rows = items.map(item => item.json);\nconst seen = new Set();\nconst latest = [];\n\nfor (const row of rows) {\n  const key = `${row.campaign_id}|${row.platform}`;\n  if (seen.has(key)) continue;\n  seen.add(key);\n  latest.push(row);\n}\n\nreturn [{\n  json: {\n    count: latest.length,\n    items: latest,\n    generated_at: new Date().toISOString()\n  }\n}];"
+        "jsCode": "const rows = items.map(item => item.json);\nconst latestExecutionId = rows.find(row => row.workflow_execution_id)?.workflow_execution_id;\nconst scopedRows = latestExecutionId\n  ? rows.filter(row => row.workflow_execution_id === latestExecutionId)\n  : rows;\nconst seen = new Set();\nconst latest = [];\n\nfor (const row of scopedRows) {\n  const key = `${row.campaign_id}|${row.platform}`;\n  if (seen.has(key)) continue;\n  seen.add(key);\n  latest.push(row);\n}\n\nreturn [{\n  json: {\n    count: latest.length,\n    workflow_execution_id: latestExecutionId || null,\n    items: latest,\n    generated_at: new Date().toISOString()\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,

@@ -124,6 +124,10 @@ export class Optimization implements OnInit {
     const deltaConversions = this.toNumber(this.expectedImpact['delta_conversions']);
     const action = String(this.primary?.recommended_action || '').toLowerCase();
 
+    if (action.includes('continue_monitoring') || action.includes('monitoring')) {
+      return "Aucun changement budgetaire requis : continuer le monitoring et verifier les KPIs au prochain audit.";
+    }
+
     if (this.isMaintainAction) {
       if (expectedRoas !== undefined && expectedRoas < 1) {
         return "Ne pas scaler maintenant : surveiller 48h et revoir le ciblage, les creatives ou l'offre avant toute hausse de budget.";
@@ -153,6 +157,12 @@ export class Optimization implements OnInit {
     }
 
     return "Appliquer l'action progressivement et suivre les KPIs prioritaires.";
+  }
+
+  get hasCorrectiveAction(): boolean {
+    const action = String(this.primary?.recommended_action || '').toLowerCase();
+
+    return Boolean(action) && !action.includes('continue_monitoring') && !action.includes('monitoring');
   }
 
   selectRecord(record: CampaignOptimizationRecord): void {

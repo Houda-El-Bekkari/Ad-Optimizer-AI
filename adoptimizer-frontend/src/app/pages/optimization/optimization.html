@@ -134,10 +134,12 @@
               <strong>{{ displayNumber(expectedImpact["expected_conversions"]) }}</strong>
             </article>
           </div>
-          <div class="action-row">
-            <button class="primary" type="button">Appliquer</button>
-            <button type="button">Ignorer</button>
-          </div>
+          @if (hasCorrectiveAction) {
+            <div class="action-row">
+              <button class="primary" type="button">Appliquer</button>
+              <button type="button">Ignorer</button>
+            </div>
+          }
         </article>
 
         <article class="card">

@@ -129,7 +129,7 @@
                 <span>{{ record.campaign_id }}</span>
                 <span>{{ platformLabel(record.platform) }}</span>
                 <span>{{ displayNumber(record.health_score) }}</span>
-                <strong class="status" [class.critical]="(record.health_status || '').toLowerCase().includes('critical')" [class.warning]="(record.health_status || '').toLowerCase().includes('warning')" [class.healthy]="(record.health_status || '').toLowerCase().includes('healthy')">
+                <strong class="status" [class.critical]="(record.health_status || '').toLowerCase().includes('critical')" [class.warning]="(record.health_status || '').toLowerCase().includes('warning')" [class.healthy]="(record.health_status || '').toLowerCase().includes('healthy') || (record.health_status || '').toLowerCase() === 'ok'">
                   {{ record.health_status || "UNKNOWN" }}
                 </strong>
               </div>
@@ -144,7 +144,7 @@
           <div class="score-wrap">
             <div class="score-ring">{{ displayNumber(averageHealthScore) }}</div>
             <div>
-              <h2>{{ criticalCampaigns ? "Critical" : "Monitoring" }}</h2>
+              <h2>{{ aiAlerts ? (criticalCampaigns ? "Critical" : "Monitoring") : "Healthy" }}</h2>
               <p>{{ records.length }} canal(aux) surveilles pour {{ campaignGroupLabel }}.</p>
             </div>
           </div>

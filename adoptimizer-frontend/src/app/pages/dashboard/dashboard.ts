@@ -194,6 +194,10 @@ export class Dashboard implements OnInit {
     const deltaConversions = this.toNumber(expectedImpact['delta_conversions']);
     const action = String(record.recommended_action || '').toLowerCase();
 
+    if (action.includes('continue_monitoring') || action.includes('monitoring')) {
+      return "Aucun changement budgetaire requis : continuer le monitoring et verifier les KPIs au prochain audit.";
+    }
+
     if (this.isMaintainAction(record)) {
       if (expectedRoas !== undefined && expectedRoas < 1) {
         return "Ne pas scaler maintenant : surveiller 48h et revoir le ciblage, les creatives ou l'offre.";

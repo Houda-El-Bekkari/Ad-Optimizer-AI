@@ -1,8 +1,8 @@
-<<<<<<< HEAD
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
-=======
+
 from fastapi import FastAPI
 from fastapi import Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -57,6 +57,7 @@ from app.services.case2_xai import run_case2_xai
 from app.services.llm import run_case2_final_response, run_dashboard_summary
 from app.services.audit_report import run_audit_report
 from app.services.audit_report_pdf import run_audit_report_pdf
+from app.services.health_monitoring_dashboard import run_health_monitoring_dashboard
 
 from app.services.auth_service import authenticate_user
 
@@ -265,6 +266,16 @@ def correlation():
 def health_score():
 
     return run_health_score()
+
+
+@app.post("/health-monitoring-dashboard")
+def health_monitoring_dashboard(payload: dict | None = None):
+    result = run_health_monitoring_dashboard(payload)
+
+    if result.get("status") != "success":
+        raise HTTPException(status_code=500, detail=result.get("message", "Health monitoring indisponible"))
+
+    return result
 
 
 @app.post("/causal")
