@@ -6,9 +6,9 @@ import { RouterLink } from '@angular/router';
 
 import { FormsModule } from '@angular/forms';
 
-import { HttpClient } from '@angular/common/http';
-
 import { NgIf } from '@angular/common';
+
+import { AuthApi } from '../../services/auth-api';
 
 
 
@@ -45,7 +45,7 @@ export class Login {
 
   constructor(
 
-    private http: HttpClient,
+    private authApi: AuthApi,
 
     private router: Router
 
@@ -64,13 +64,7 @@ export class Login {
 
 
 
-    this.http.post(
-
-      'http://127.0.0.1:8000/login',
-
-      payload
-
-    ).subscribe({
+    this.authApi.login(payload).subscribe({
 
 next: (response: any) => {
 
@@ -80,15 +74,6 @@ next: (response: any) => {
 
     return;
   }
-
-  console.log(response);
-
-  localStorage.setItem(
-
-    'user',
-
-    JSON.stringify(response)
-  );
 
   this.router.navigate([
     '/connect-platforms'

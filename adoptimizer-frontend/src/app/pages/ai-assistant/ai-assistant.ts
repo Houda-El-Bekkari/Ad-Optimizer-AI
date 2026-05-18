@@ -1,9 +1,11 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { AiAssistantApi, AiAssistantResponse, AssistantMode } from '../../services/ai-assistant-api';
+import { AiAssistantApi, AiAssistantResponse, AssistantMode, ChatHistoryItem } from '../../services/ai-assistant-api';
+import { AuthApi } from '../../services/auth-api';
 
 interface ChatMessage {
+  id?: number;
   role: 'user' | 'ai';
   text: string;
   meta?: string;
@@ -15,7 +17,7 @@ interface ChatMessage {
   templateUrl: './ai-assistant.html',
   styleUrl: './ai-assistant.scss',
 })
-export class AiAssistant {
+export class AiAssistant implements OnInit {
   question = '';
   selectedMode: AssistantMode = 'auto';
   loading = false;
@@ -42,7 +44,7 @@ export class AiAssistant {
     },
   ];
 
-  messages: ChatMessage[] = [
+  private readonly initialMessages: ChatMessage[] = [
     {
       role: 'user',
       text: 'Pourquoi mon ROAS a baisse cette semaine ?',
@@ -56,12 +58,84 @@ export class AiAssistant {
     },
   ];
 
+  messages: ChatMessage[] = [...this.initialMessages];
   lastMode = 'auto';
+  deletingMessageId: number | null = null;
+  clearingHistory = false;
 
   constructor(
     private readonly api: AiAssistantApi,
+    private readonly authApi: AuthApi,
     private readonly cdr: ChangeDetectorRef,
   ) {}
+
+  ngOnInit(): void {
+    this.loadHistory();
+  }
+
+  get hasSavedMessages(): boolean {
+    return this.messages.some((message) => typeof message.id === 'number');
+  }
+
+  loadHistory(): void {
+    if (!this.authApi.isAuthenticated()) {
+      return;
+    }
+
+    this.api.history().subscribe({
+      next: (history) => {
+        this.applyHistory(history);
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Unable to load chatbot history', error);
+      },
+    });
+  }
+
+  deleteMessage(message: ChatMessage): void {
+    if (!message.id || !this.authApi.isAuthenticated() || this.deletingMessageId) {
+      return;
+    }
+
+    this.deletingMessageId = message.id;
+
+    this.api.deleteMessage(message.id).subscribe({
+      next: () => {
+        this.deletingMessageId = null;
+        this.loadHistory();
+      },
+      error: (error) => {
+        console.error('Unable to delete chatbot message', error);
+        this.deletingMessageId = null;
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  clearConversation(): void {
+    if (!this.authApi.isAuthenticated() || this.clearingHistory || !this.hasSavedMessages) {
+      return;
+    }
+
+    if (!window.confirm('Supprimer toute la conversation ?')) {
+      return;
+    }
+
+    this.clearingHistory = true;
+
+    this.api.clearHistory().subscribe({
+      next: () => {
+        this.clearingHistory = false;
+        this.loadHistory();
+      },
+      error: (error) => {
+        console.error('Unable to clear chatbot history', error);
+        this.clearingHistory = false;
+        this.cdr.detectChanges();
+      },
+    });
+  }
 
   selectMode(mode: AssistantMode): void {
     this.selectedMode = mode;
@@ -79,6 +153,11 @@ export class AiAssistant {
       return;
     }
 
+    if (!this.authApi.isAuthenticated()) {
+      this.error = 'Connectez-vous pour utiliser la memoire conversationnelle du chatbot.';
+      return;
+    }
+
     this.error = '';
     this.loading = true;
     this.messages = [...this.messages, { role: 'user', text: question, meta: 'Vous' }];
@@ -87,15 +166,17 @@ export class AiAssistant {
     this.api.ask({ question, mode: this.selectedMode }).subscribe({
       next: (response) => {
         this.lastMode = String(response.mode || this.selectedMode);
+        const answer = this.extractAnswer(response);
         this.messages = [
           ...this.messages,
           {
             role: 'ai',
-            text: this.extractAnswer(response),
+            text: answer,
             meta: this.modeLabel(this.lastMode),
           },
         ];
         this.loading = false;
+        this.loadHistory();
         this.cdr.detectChanges();
       },
       error: () => {
@@ -149,4 +230,28 @@ export class AiAssistant {
 
     return 'Auto';
   }
+
+  private applyHistory(history: ChatHistoryItem[]): void {
+    if (!history.length) {
+      this.messages = [...this.initialMessages];
+      return;
+    }
+
+    this.messages = history.flatMap((item) => [
+      {
+        id: item.id,
+        role: 'user' as const,
+        text: item.question,
+        meta: 'Vous',
+      },
+      {
+        id: item.id,
+        role: 'ai' as const,
+        text: item.response,
+        meta: this.modeLabel(item.mode),
+      },
+    ]);
+    this.lastMode = history[history.length - 1].mode || this.lastMode;
+  }
+
 }

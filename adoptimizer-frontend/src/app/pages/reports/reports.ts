@@ -5,6 +5,7 @@ import {
   AuditReportCampaign,
   AuditReportData,
 } from '../../services/audit-report-api';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-reports',
@@ -12,7 +13,7 @@ import {
   styleUrls: ['../shared/internal-page.scss', './reports.scss'],
 })
 export class Reports implements OnInit {
-  private readonly auditReportPdfUrl = 'http://127.0.0.1:8000/audit-report/pdf';
+  private readonly auditReportPdfUrl = `${environment.apiUrl}/audit-report/pdf`;
 
   report?: AuditReportData;
   loading = true;

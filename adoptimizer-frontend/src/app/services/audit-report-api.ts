@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { environment } from '../../environments/environment';
+
 export interface AuditReportKpis {
   roas?: number;
   conversions?: number;
@@ -126,7 +128,7 @@ export interface AuditReportResponse {
 
 @Injectable({ providedIn: 'root' })
 export class AuditReportApi {
-  private readonly auditReportUrl = 'http://127.0.0.1:8000/audit-report';
+  private readonly auditReportUrl = `${environment.apiUrl}/audit-report`;
 
   constructor(private readonly http: HttpClient) {}
 

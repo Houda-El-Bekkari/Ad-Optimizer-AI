@@ -1299,6 +1299,7 @@
           }
         ]
       ]
+<<<<<<< HEAD
     },
     "Prepare Healthy Dashboard Rows": {
       "main": [
@@ -1321,6 +1322,8 @@
           }
         ]
       ]
+=======
+>>>>>>> origin/nom-branche
     }
   },
   "active": false,
